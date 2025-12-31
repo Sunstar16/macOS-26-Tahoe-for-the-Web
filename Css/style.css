@@ -535,7 +535,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 
 @media screen and (max-width: 900px) {
   .dock {
-    border-radius: 20px;
+    border-radius: 24px;
   }
 }
 
