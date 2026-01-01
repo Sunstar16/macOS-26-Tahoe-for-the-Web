@@ -106,7 +106,7 @@ body {
 
 .navbar .leftLi:hover {
   color: var(--color-white);
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: var(--color-white-200);
 }
 
@@ -299,7 +299,7 @@ li:hover > ul {
 
 li > ul > li {
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding-bottom: 5px;
   margin-bottom: 5px !important;
 }
@@ -541,10 +541,10 @@ li > .menu__container > .grid__controling .control_center--grid {
 }
 
 .dock .point {
-  width: 6px;
-  height: 6px;
-  margin: 0;
-  background-color: var(--color-white-200);
+  width: 5px;
+  height: 5px;
+  margin-top: -4px;
+  background-color: var(--color-black-600);
   border-radius: 50%;
   display: none;
   animation: top-to-bottom 0.3s;
