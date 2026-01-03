@@ -224,6 +224,12 @@ li.app_name {
 
 .navbar__right .battery__popup.opened {
   opacity: 1;
+border-radius: 18px;
+background: var(--color-white-100);
+border: 1px solid var(--color-white-200);
+backdrop-filter: blur(5px);
+box-shadow: none;
+text-shadow: none;
 }
 
 .navbar__right .battery__popup header {
@@ -270,6 +276,7 @@ li.app_name {
 
 .navbar__right .battery__popup button:hover {
   background-color: var(--color-blue-800);
+  border-radius: 18px;
 }
 
 .navbar__right .battery__popup button:active {
@@ -329,6 +336,7 @@ li > ul > li > button {
 li > ul > li > button:hover {
   color: var(--color-white);
   background: var(--color-blue-800);
+  border-radius: 18px;
 }
 
 li > ul > li > button:active {
