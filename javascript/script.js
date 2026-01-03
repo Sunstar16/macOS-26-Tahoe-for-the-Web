@@ -83,6 +83,18 @@ const mapsApp = {
   opening: document.querySelector(".open-map"),
 };
 
+// Safari App - Definición exacta igual que Maps
+const safariApp = {
+  app_name: document.querySelector("#Safari-nav"),
+  window: document.querySelector(".safari"),
+  full: document.querySelector(".safari .full-map"),
+  close: document.querySelector(".safari .close-map"),
+  backfull: document.querySelector(".safari .backfull-map"),
+  point: document.querySelector("#point-safari"),
+  opening: document.querySelector(".open-safari"),
+};
+
+
 // Launchpad
 const launchpad = {
   container: document.querySelector(".container__Window"),
@@ -161,6 +173,23 @@ function open_window(open, point, appName) {
   appName.style.display = "block";
   point.style.display = "block";
 }
+
+// Safari Event Listeners
+safariApp.opening.addEventListener("click", () => {
+  open_window(safariApp.window, safariApp.point, safariApp.app_name);
+});
+
+safariApp.close.addEventListener("click", () => {
+  close_window(safariApp.window, safariApp.point, safariApp.app_name);
+});
+
+safariApp.full.addEventListener("click", () => {
+  handleFullScreen(safariApp.window);
+});
+
+safariApp.backfull.addEventListener("click", () => {
+  handleMinimize(safariApp.window);
+});
 
 // Launchpad function start
 launchpad.opening.addEventListener("click", handleOpenLaunching);
@@ -346,6 +375,7 @@ $(function () {
   $(".Vscode").draggable();
   $(".spotlight_serach").draggable();
   $(".maps").draggable();
+  $(".safari").draggable();
 });
 
 // Date and time
@@ -509,3 +539,4 @@ elements.batteryButton.addEventListener("click", () => {
 // Call the functions
 calculateBattery();
 digi();
+
