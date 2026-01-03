@@ -642,7 +642,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 }
 
 .window__taskbar {
-  height: 12%;
+  height: 6%;
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
@@ -1421,4 +1421,28 @@ border-top-right-radius: 24px;
 border-bottom-right-radius: 24px;
 border-bottom-left-radius: 24px;
 color: white;
+}
+
+/* Safari App Window - Consistencia con macOS Tahoe */
+.safari {
+  flex-grow: 1;
+  width: 900px;
+  height: 550px;
+  background-color: var(--app-color-white);
+  top: 10%;
+  left: 20%;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: none; /* Importante: empieza oculto como Maps */
+  flex-direction: column;
+  overflow: hidden;
+}
+/* Ajuste del iframe para que ocupe el espacio restante bajo la taskbar */
+.safari iframe {
+  position: absolute;
+  flex-grow: 1; /* Esto hace que el iframe rellene todo el espacio disponible */
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  display: block;
 }
