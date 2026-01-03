@@ -870,13 +870,12 @@ li > .menu__container > .grid__controling .control_center--grid {
   top: 30%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
-  border: 2px solid var(--color-white-100);
+  border: 1px solid var(--color-white-200);
   justify-content: start;
-  border-radius: 22px;
-  background-color: transparent;
-  backdrop-filter: blur(10px);
+  border-radius: 100px;
+  background: var(--color-white-100);
+  backdrop-filter: blur(5px);
   z-index: 10;
-  box-shadow: 0 10px 10px rgba(37, 37, 37, 0.137);
 }
 .spotlight_serach svg {
   margin-left: 10px;
@@ -889,6 +888,7 @@ li > .menu__container > .grid__controling .control_center--grid {
   font-family: Lexend;
   margin-left: 10px;
   padding-right: 10px;
+  color: white;
 }
 .spotlight_serach input::placeholder {
   color: white;
