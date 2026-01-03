@@ -102,6 +102,9 @@
         <li class="leftLi app_name" id="map">
           <p>Maps</p>
         </li>
+        <li class="leftLi app_name" id="Safari-nav">
+          <p>Safari</p>
+        </li>
         <li class="leftLi">
           File
           <ul>
@@ -357,10 +360,10 @@
         />
  <hr class="point hidden" id="point-launchpad" />
       </button>
- <button class="icon">
+ <button class="icon open-safari">
       <span class="dock-label">Safari</span>
         <img src="./icon/dock/safari.png" alt="Safari Logo" class="hidden" />
-        <hr class="point hidden" id="point-vscode" />
+        <hr class="point hidden" id="point-safari" />
       </button>
       <button class="icon">
       <span class="dock-label">Messages</span>
@@ -777,6 +780,26 @@
             src="https://maps.google.com/maps?q=2880%20Broadway,%20Amol&t=&z=13&ie=UTF8&iwloc=&output=embed">
           </iframe>
         </div>
+</div> <div class="safari window-style">
+  <div class="window__taskbar">
+    <div class="window__taskbar--actions">
+      <button class="close-map red-radius"></button>
+      <button class="backfull-map yellow-radius"></button>
+      <button class="full-map green-radius"></button>
+    </div>
+    <div class="window__taskbar--content">
+      <p>Safari</p>
+    </div>
+  </div>
+<div class="content">
+  <iframe 
+    src="https://www.google.com/search?igu=1" 
+    width="100%" 
+    height="100%" 
+    style="border: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+  </iframe>
+  </div>
+</div>
       </div>
       <!-- calculator -->
       <div class="calculator">
