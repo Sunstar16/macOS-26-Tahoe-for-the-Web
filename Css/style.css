@@ -559,6 +559,13 @@ li > .menu__container > .grid__controling .control_center--grid {
   opacity: 1;
 }
 
+
+#point-launchpad {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 .dock .column {
   width: 1px;
   height: 45px;
