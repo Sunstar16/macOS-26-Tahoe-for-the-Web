@@ -10,4 +10,4 @@ Renewed continuation of an old famous project that recreated a macOS BigSur desk
 
 THIS PROYECT IS IN PROGRESS AND IS BEING MAINTAINED!
 
-HERE: https://sunstar16.github.io/macOS-Tahoe-for-the-Web/
+HERE: https://sunstar16.github.io/macOS-26-Tahoe-for-the-Web/
