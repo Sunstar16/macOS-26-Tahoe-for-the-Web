@@ -405,7 +405,6 @@ $(function () {
   $(".note").draggable();
   $(".calculator").draggable();
   $(".Vscode").draggable();
-  $(".spotlight_serach").draggable();
   $(".maps").draggable();
   $(".safari").draggable();
   $(".music").draggable();
