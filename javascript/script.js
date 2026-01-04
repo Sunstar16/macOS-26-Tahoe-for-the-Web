@@ -94,6 +94,17 @@ const safariApp = {
   opening: document.querySelector(".open-safari"),
 };
 
+// Music App
+const musicApp = {
+  app_name: document.querySelector("#Music-nav"),
+  window: document.querySelector(".music"),
+  full: document.querySelector(".music .full-map"),
+  close: document.querySelector(".music .close-map"),
+  backfull: document.querySelector(".music .backfull-map"),
+  point: document.querySelector("#point-music"),
+  opening: document.querySelector(".open-music"),
+};
+
 
 // Launchpad
 const launchpad = {
@@ -189,6 +200,27 @@ safariApp.full.addEventListener("click", () => {
 
 safariApp.backfull.addEventListener("click", () => {
   handleMinimize(safariApp.window);
+});
+
+// Music Event Listeners
+musicApp.opening.addEventListener("click", () => {
+  open_window(musicApp.window, musicApp.point, musicApp.app_name);
+});
+
+musicApp.close.addEventListener("click", () => {
+  close_window(musicApp.window, musicApp.point, musicApp.app_name);
+});
+
+// Al hacer clic en el botón verde (full), no ejecutamos ninguna función
+musicApp.full.addEventListener("click", () => {
+  // No hace nada, botón deshabilitado
+  console.log("Maximizar deshabilitado en Music"); 
+});
+
+// Botón Amarillo (Minimizar) - Deshabilitado
+musicApp.backfull.addEventListener("click", () => {
+  console.log("Minimizar deshabilitado en Music");
+  // Al no llamar a handleMinimize(musicApp.window), no hará nada
 });
 
 // Launchpad function start
@@ -376,6 +408,7 @@ $(function () {
   $(".spotlight_serach").draggable();
   $(".maps").draggable();
   $(".safari").draggable();
+  $(".music").draggable();
 });
 
 // Date and time
