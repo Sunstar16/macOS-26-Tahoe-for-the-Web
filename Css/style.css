@@ -531,7 +531,7 @@ li > .menu__container > .grid__controling .control_center--grid {
   align-items: center;
   position: fixed;
   padding: 0.2rem 0.5rem 0 0.5rem;
-  bottom: 3%;
+  bottom: 1%;
   left: 50%;
   height: 65px;
   transform: translateX(-50%);
