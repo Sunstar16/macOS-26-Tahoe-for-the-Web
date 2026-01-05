@@ -251,6 +251,23 @@ function handleOpenLaunching() {
   launchpad.container.style.display = "none";
 }
 
+// Detectar clic en el fondo del Launchpad para cerrar
+launchpad.window.addEventListener("click", (e) => {
+  // Si el clic es en el fondo o en el contenedor de apps (pero no en un icono)
+  if (e.target === launchpad.window || e.target === launchpad.app_container) {
+    // Si está abierto (display no es none), lo cerramos
+    if (launchpad.window.style.display !== "none") {
+      handleOpenLaunching(); 
+    }
+  }
+});
+
+// Evitar que se cierre al clicar en la barra de búsqueda
+launchpad.searchbox.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+
 function handleLaunchpadSearch(e) {
   for (let app of launchpad.app_container.children) {
     if (e.target.value) {
