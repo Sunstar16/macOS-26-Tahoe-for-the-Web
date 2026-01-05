@@ -282,13 +282,22 @@ function handleLaunchpadSearch(e) {
 
 // Calculator app start
 function handleOpenCal_lunchpad() {
-  calculatorApp.window.style.display = "block";
-  calculatorApp.app_name.style.display = "block";
-  launchpad.container.style.display = "flex";
-  elements.navbar.style.display = "flex";
-  launchpad.window.style.display = "none";
-  calculatorApp.point.style.display = "block";
-  launchpad.point.style.display = "none";
+  // 1. Ejecutamos la animación de cierre (la que pusimos antes)
+  handleOpenLaunching(); 
+
+  // 2. Esperamos los 300ms de la animación antes de que aparezca la calculadora
+  setTimeout(() => {
+    calculatorApp.window.style.display = "block";
+    calculatorApp.app_name.style.display = "block";
+    
+    // El resto de tus estilos originales
+    launchpad.container.style.display = "flex";
+    elements.navbar.style.display = "flex";
+    calculatorApp.point.style.display = "block";
+    
+    // Nota: handleOpenLaunching ya se encarga de ocultar el launchpad.window
+    // y de quitar el punto del launchpad, así que no hace falta repetirlo aquí.
+  }, 300);
 }
 // Calculator app end
 
