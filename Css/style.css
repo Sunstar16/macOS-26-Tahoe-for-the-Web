@@ -1081,6 +1081,22 @@ li > .menu__container > .grid__controling .control_center--grid {
   }
 }
 
+/* NUEVA: Animación de salida (Exactamente al revés) */
+@keyframes close-opacity {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+/* Clase que aplicaremos por JS para cerrar */
+.launchpad-closing {
+  animation: close-opacity 300ms forwards !important;
+}
+
 .calculator {
   display: none;
   width: 20rem;
