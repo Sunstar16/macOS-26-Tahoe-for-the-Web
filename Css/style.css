@@ -81,7 +81,6 @@ body {
   font-size: 14px;
   margin: 0 4px;
   cursor: url(../cursor/Link.cur), pointer;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.288);
   transition: 0.2s;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -89,6 +88,8 @@ body {
 
 .navbar .leftLi.logo img {
   transform: translateY(1px);
+  width: 17px;
+  height: 18px;
 }
 
 .navbar svg {
@@ -96,7 +97,7 @@ body {
 }
 
 .navbar .leftLi {
-  padding: 4px 8px;
+  padding: 3px 6px;
 }
 
 .navbar .leftLi a {
@@ -118,6 +119,11 @@ li.app_name {
 .navbar__right li {
   margin: 0 10px;
 }
+
+.navbar__rightLi {
+  padding: 2px 6px;
+}
+
 
 .navbar__right li svg {
   transform: scale(0.8);
