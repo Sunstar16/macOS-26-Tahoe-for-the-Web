@@ -117,13 +117,9 @@ li.app_name {
 }
 
 .navbar__right li {
-  margin: 0 10px;
+  margin: 0 5px;
+  left: 3px
 }
-
-.navbar__rightLi {
-  padding: 2px 6px;
-}
-
 
 .navbar__right li svg {
   transform: scale(0.8);
@@ -135,7 +131,7 @@ li.app_name {
 
 .navbar__right .clock #clock {
   margin-left: 15px;
-  margin-right: 15px;
+  margin-right: 6px;
 }
 
 .navbar__right li .control-center {
