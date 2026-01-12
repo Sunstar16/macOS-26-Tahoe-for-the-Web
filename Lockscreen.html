@@ -129,4 +129,11 @@
                 alert('Incorrect password.');
             }
         }
-        setInterval
+        setInterval(updateTime, 60000);
+        updateTime();
+        document.getElementById('password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') checkPassword();
+        });
+    </script>
+</body>
+</html>
