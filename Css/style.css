@@ -50,7 +50,7 @@ body {
 }
 
 /* Nueva clase para el efecto de cursor grande de macOS Tahoe */
-.cursor-big {
+.cursor-big, .cursor-big * {
   cursor: url('../cursor/normal-select-big.png'), auto !important;
 }
 
@@ -350,8 +350,10 @@ li > ul > li > button {
   padding-left: 21px;
 }
 
-li > ul > li > button:hover {
-  color: var(--color-white);
+/* Cuando pasas el mouse por el botón, el texto del botón Y sus hijos se vuelven blancos */
+li > ul > li > button:hover,
+li > ul > li > button:hover * {
+  color: var(--color-white) !important;
   background: var(--color-blue-800);
   border-radius: 18px;
 }
