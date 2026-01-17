@@ -45,6 +45,8 @@ body {
   font-family: "Lexend", sans-serif;
   background: url("../background/iridescence.jpg") center/cover no-repeat;
   overflow: hidden;
+  /* Cambio mínimo: Ruta relativa a tu archivo PNG */
+  cursor: url('../cursor/normal-select.png'), auto;
 }
 
 #loading {
@@ -987,6 +989,8 @@ li > .menu__container > .grid__controling .control_center--grid {
 
 @media screen and (min-width: 1200px) {
   .launchpad .Apps-container {
+    position: relative;
+    top: 18px;
     grid-row-gap: 20px;
   }
   .launchpad .child-launchpad img {
