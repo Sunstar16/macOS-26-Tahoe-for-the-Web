@@ -1537,3 +1537,173 @@ color: white;
 .launchpad-closing {
   animation: close-opacity 300ms forwards !important;
 }
+/********** About This Mac - Estilo Tahoe Final (Alineación Espejo) **********/
+
+/* Contenedor principal invisible */
+.window-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 9999;
+    pointer-events: none; 
+}
+
+/* La ventana física (Caja estilo cristal) */
+.about-content {
+    pointer-events: auto;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 330px; 
+    background: rgba(245, 245, 247, 1.85);
+    backdrop-filter: blur(35px);
+    -webkit-backdrop-filter: blur(35px);
+    opacity: 98%;
+    border-radius: 15px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(0,0,0,0.1);
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+}
+
+/* Cabecera para arrastrar */
+.window-header {
+    width: 100%;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    cursor: grab;
+}
+
+.window-header:active { cursor: grabbing; }
+
+/* Botón de cierre rojo */
+.close-btn {
+    position: absolute;
+    width: 12px; height: 12px;
+    background: #ff5f57;
+    border: 0.5px solid rgba(0,0,0,0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -8px;
+    left: 10px;
+}
+
+/* Cuerpo de la ventana */
+.about-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mac-icon {
+    width: 160px;
+    height: auto;
+    margin: 5px 0 10px 0;
+/* EVITA QUE LA IMAGEN SEA ARRASTRABLE HACIA AFUERA */
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none; /* Esto hace que el clic "atraviese" la imagen y llegue a la caja */
+}
+
+.mac-title {
+    font-size: 25px;
+    font-weight: 700;
+    margin: 0;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+}
+
+.mac-subtitle {
+    font-size: 10px;
+    color: #86868b;
+    margin: 4px 0 25px 0;
+}
+
+/* CONTENEDOR DE SPECS (El truco de la alineación) */
+.specs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.spec-row {
+    display: grid;
+    /* 1.1fr y 0.9fr para que el "choque" de textos sea central pero equilibrado */
+    grid-template-columns: 1.1fr 0.9fr; 
+    gap: 12px;
+}
+
+.spec-label {
+    position: relative;
+    left: -15px;
+    text-align: right;
+    font-weight: 356;
+    font-size: 11px;
+    color: #1d1d1f;
+}
+
+.spec-value {
+    position: relative;
+    text-align: left;
+    font-size: 11px;
+    color: #434344;
+    left: -16px;
+    margin-top: -0.5px;
+}
+
+/* BOTÓN MÁS INFORMACIÓN */
+.more-info-btn {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 5px 14px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d1d1f;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+
+.more-info-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* TEXTOS LEGALES PIE */
+.footer-legal {
+    text-align: center;
+    font-size: 11px;
+    color: #a1a1a6;
+    line-height: 1.3;
+    padding: 0 20px;
+}
+
+/* Nuevos botones grises al lado del rojo */
+.dot-grey {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    background: #e1e1e1; /* Gris claro tipo Apple */
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    top: -3.8px;
+    margin-left: 9px;
+    left: 15px;
+}
+
+/* Ajuste opcional: si quieres que el rojo tenga un margen exacto */
+.close-btn {
+    margin-left: 0px !important; /* Reseteamos para que el grupo empiece bien */
+}
+
+.window-header {
+    gap: 0px; /* Controlamos el espacio manualmente con los márgenes */
+    padding-left: 15px;
+}
