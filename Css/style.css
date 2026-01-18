@@ -1584,7 +1584,7 @@ color: white;
 /* Botón de cierre rojo */
 .close-btn {
     position: absolute;
-    width: 12px; height: 12px;
+    width: 13px; height: 13px;
     background: #ff5f57;
     border: 0.5px solid rgba(0,0,0,0.2);
     border-radius: 50%;
@@ -1688,8 +1688,8 @@ color: white;
 /* Nuevos botones grises al lado del rojo */
 .dot-grey {
     position: relative;
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     background: #e1e1e1; /* Gris claro tipo Apple */
     border: 0.5px solid rgba(0,0,0,0.1);
     border-radius: 50%;
