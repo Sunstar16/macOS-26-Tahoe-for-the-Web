@@ -67,9 +67,10 @@
     <!-- <div id="loading"></div> -->
     <div class="navbar">
       <ul>
-        <li class="leftLi logo">
-          <img src="./icon/apple_logo_menu_bar-2.png" alt="Apple logo" />
-          <ul>
+        <li class="leftLi logo" id="apple-menu-bar">
+          <img src="./icon/apple_logo_menu_bar-2.png" alt="Apple logo" id="apple-menu-icon" />
+          <div id="apple-menu-bridge" style="position:absolute;left:0;top:calc(100% - 2px);width:100%;height:12px;z-index:99;pointer-events:auto;"></div>
+          <ul id="apple-menu-dropdown">
             <li>
               <button id="about-link">About This Mac</button>
             </li>
@@ -852,7 +853,7 @@
   </div>
 <div class="content">
   <iframe 
-    src="https://workstation.lhost.dev/" 
+    src="https://jiyuu.dnsitalia.org/" 
     width="100%" 
     height="100%" 
     style="border: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
@@ -956,6 +957,35 @@
 
     <script src="./javascript/script.js"></script>
     <script src="./javascript/app.js"></script>
+    <script>
+    // Robust Apple menu hover logic with invisible bridge
+    (function() {
+      const bar = document.getElementById('apple-menu-bar');
+      const icon = document.getElementById('apple-menu-icon');
+      const menu = document.getElementById('apple-menu-dropdown');
+      const bridge = document.getElementById('apple-menu-bridge');
+      let menuHideTimeout;
+
+      function showMenu() {
+        clearTimeout(menuHideTimeout);
+        menu.style.display = 'flex';
+      }
+      function hideMenu() {
+        menuHideTimeout = setTimeout(() => {
+          menu.style.display = '';
+        }, 80);
+      }
+
+      icon.addEventListener('mouseenter', showMenu);
+      bar.addEventListener('mouseenter', showMenu);
+      menu.addEventListener('mouseenter', showMenu);
+      bridge.addEventListener('mouseenter', showMenu);
+      icon.addEventListener('mouseleave', hideMenu);
+      bar.addEventListener('mouseleave', hideMenu);
+      menu.addEventListener('mouseleave', hideMenu);
+      bridge.addEventListener('mouseleave', hideMenu);
+    })();
+    </script>
     
 <div id="about-window" class="window-overlay">
   <div class="about-content" id="draggable-window">
@@ -999,5 +1029,61 @@
     </div>
   </div>
 </div>
+    <svg style="display: none">
+      <filter
+        id="glass-distortion"
+        x="0%"
+        y="0%"
+        width="100%"
+        height="100%"
+        filterUnits="objectBoundingBox"
+      >
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.01 0.01"
+          numOctaves="1"
+          seed="5"
+          result="turbulence"
+        />
+        <!-- Seeds: 14, 17,  -->
+
+        <feComponentTransfer in="turbulence" result="mapped">
+          <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
+          <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
+          <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+        </feComponentTransfer>
+
+        <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
+
+        <feSpecularLighting
+          in="softMap"
+          surfaceScale="5"
+          specularConstant="1"
+          specularExponent="100"
+          lighting-color="white"
+          result="specLight"
+        >
+          <fePointLight x="-200" y="-200" z="300" />
+        </feSpecularLighting>
+
+        <feComposite
+          in="specLight"
+          operator="arithmetic"
+          k1="0"
+          k2="1"
+          k3="1"
+          k4="0"
+          result="litImage"
+        />
+
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="softMap"
+          scale="150"
+          xChannelSelector="R"
+          yChannelSelector="G"
+        />
+      </filter>
+    </svg>
   </body>
 </html>
