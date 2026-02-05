@@ -946,17 +946,31 @@
     </section>
     <!-- Widgets panel -->
   </div>
-    <div class="spotlight_serach">
-      <svg width="24" height="24">
-        <path
-          d="M10,18c1.846,0,3.543-0.635,4.897-1.688l4.396,4.396l1.414-1.414l-4.396-4.396C17.365,13.543,18,11.846,18,10 c0-4.411-3.589-8-8-8s-8,3.589-8,8S5.589,18,10,18z M10,4c3.309,0,6,2.691,6,6s-2.691,6-6,6s-6-2.691-6-6S6.691,4,10,4z"
-        />
-      </svg>
-      <input type="search" placeholder="Spotlight Search" />
-    </div>
+<div class="spotlight_serach" style="display: flex; position: relative;">
+  <svg width="24" height="24">
+    <path d="M10,18c1.846,0,3.543-0.635,4.897-1.688l4.396,4.396l1.414-1.414l-4.396-4.396C17.365,13.543,18,11.846,18,10 c0-4.411-3.589-8-8-8s-8,3.589-8,8S5.589,18,10,18z M10,4c3.309,0,6,2.691,6,6s-2.691,6-6,6s-6-2.691-6-6S6.691,4,10,4z"></path>
+  </svg>
+  <input type="search" placeholder="Spotlight Search">
+
+<div class="tahoe-button-group">
+  <button class="tahoe-circle-btn">
+    <img src="icon/symbols/AppStore-Symbol.png" alt="App Store">
+  </button>
+  <button class="tahoe-circle-btn">
+    <img src="icon/symbols/Folder-Symbol.png" alt="Finder">
+  </button>
+  <button class="tahoe-circle-btn">
+    <img src="icon/symbols/Shortcuts-Symbol.png" alt="Shortcuts">
+  </button>
+  <button class="tahoe-circle-btn">
+    <img src="icon/symbols/Copy-Symbol.png" alt="Copy">
+  </button>
+</div>
+</div>
 
     <script src="./javascript/script.js"></script>
     <script src="./javascript/app.js"></script>
+
     <script>
     // Robust Apple menu hover logic with invisible bridge
     (function() {
