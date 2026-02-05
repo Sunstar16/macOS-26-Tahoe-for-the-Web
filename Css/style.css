@@ -51,7 +51,7 @@ body {
 
 /* Nueva clase para el efecto de cursor grande de macOS Tahoe */
 .cursor-big, .cursor-big * {
-  cursor: url('../cursor/normal-select-big.png'), auto !important;
+  cursor: url('../cursor/normal-select-big.png'), auto;
 }
 
 
@@ -167,6 +167,7 @@ li.app_name {
 }
 .navbar__right .battery.selected {
   background: var(--color-white-200);
+  border-radius: 10px;
 }
 
 .navbar__right .battery__container {
@@ -298,6 +299,7 @@ text-shadow: none;
   background-color: #0063f7;
 }
 
+
 li > ul {
   display: none;
   position: absolute;
@@ -318,6 +320,13 @@ li > ul {
 
 li:hover > ul {
   display: flex;
+}
+
+#apple-menu-bar > #apple-menu-dropdown {
+  display: none;
+  top: 100% !important;
+  margin-top: 0 !important;
+  z-index: 100;
 }
 
 li > ul > li {
@@ -355,7 +364,7 @@ li > ul > li > button:hover,
 li > ul > li > button:hover * {
   color: var(--color-white) !important;
   background: var(--color-blue-800);
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
 li > ul > li > button:active {
@@ -395,10 +404,12 @@ li > .menu__container > .grid__controling {
 }
 li > .menu__container > .grid__controling .control_center--grid {
   display: grid;
-  border: 2px solid rgba(255, 255, 255, 0.178);
+  border: 1px solid rgba(255, 255, 255, 0.178);
   overflow: hidden;
   border-radius: 32px;
-  backdrop-filter: blur(22px)
+  backdrop-filter: url(#glass-distortion) blur(4px);
+  -webkit-backdrop-filter: blur(4px); 
+  box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.05), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.05);
 }
 .menu__container > .grid__controling .col-5 {
   grid-area: Toggles;
@@ -552,13 +563,15 @@ li > .menu__container > .grid__controling .control_center--grid {
   padding: 0.2rem 0.5rem 0 0.5rem;
   bottom: 1%;
   left: 50%;
-  height: 65px;
+  height: 64px;
   transform: translateX(-50%);
-  backdrop-filter: blur(5px);
-  border: 1px solid var(--color-white-200);
+  backdrop-filter: url(#glass-distortion) blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 22px;
   z-index: 10;
-  background: var(--color-white-100);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.05), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 @media screen and (max-width: 900px) {
@@ -572,7 +585,7 @@ li > .menu__container > .grid__controling .control_center--grid {
   margin-bottom: -60px;
   width: 5px;
   height: 5px;
-  margin-top: -4px;
+  margin-top: -6px;
   background-color: var(--color-black-600);
   border-radius: 50%;
   display: none;
@@ -594,10 +607,10 @@ li > .menu__container > .grid__controling .control_center--grid {
 }
 
 .dock .column {
-  width: 1px;
-  height: 45px;
+  width: 0.08rem;
+  height: 50px;
   margin: 0 4px;
-  background: var(--color-white-400);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .dock .icon {
@@ -634,6 +647,12 @@ li > .menu__container > .grid__controling .control_center--grid {
 }
 
 .dock .icon img:active {
+
+/* Make Downloads/Trash visually static when not draggable */
+.dock .icon.static {
+  cursor: default;
+  -webkit-user-drag: none;
+}
   filter: brightness(0.6) drop-shadow(0 0 10px #2c2c2c);
 }
 
@@ -757,12 +776,17 @@ li > .menu__container > .grid__controling .control_center--grid {
   height: 9%;
 }
 
+.terminal .window__taskbar {
+  height: 9%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 .terminal_content {
   width: 100%;
   height: 91%;
   overflow-y: scroll;
   padding-left: 1rem;
-  background-color: rgba(5, 5, 99, 0.63);
+  background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(12px);
   color: rgb(235, 235, 235);
   font-size: 20px;
@@ -1303,7 +1327,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 .context-menu ul button:hover {
   background: var(--color-blue-800);
   color: white;
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
 /* Aplicar el mismo estilo de separador a los elementos del menú contextual */
@@ -1321,7 +1345,8 @@ li > .menu__container > .grid__controling .control_center--grid {
   right: 10px;
   transform: translateX(115%);
   transition: all 0.3s cubic-bezier(0.79, 0.14, 0.15, 0.86);
-  backdrop-filter: blur(1rem);
+  backdrop-filter: url(#glass-distortion) blur(4px);
+  -webkit-backdrop-filter: blur(1rem);
   border: 1px solid var(--color-white-200);
   border-radius: 16px;
   overflow: hidden;
