@@ -913,7 +913,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 }
 
 .spotlight_serach {
-  position: absolute;
+  position: absolute !important;
   width: 400px;
   height: 50px;
   display: flex;
