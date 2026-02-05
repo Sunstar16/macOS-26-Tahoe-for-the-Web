@@ -1,3 +1,13 @@
+/* 
+Now it's not good cause when i set this, the default blur will be remove of everywhere.
+
+function change_brightness() {
+  var brightnessVal = elements.brightness_range.value;
+
+  elements.body.style.filter = `brightness(${brightnessVal + '%'})`;
+  elements.body.style.backdropFilter = `brightness(${brightnessVal + '%'})`;
+}
+*/
 /********** ELEMENTS **********/
 const elements = {
   body: document.querySelector("body"),
@@ -118,16 +128,51 @@ const launchpad = {
 
 /********** LISTENERS **********/
 
-/* 
-Now it's not good cause when i set this, the default blur will be remove of everywhere.
 
-function change_brightness() {
-  var brightnessVal = elements.brightness_range.value;
-
-  elements.body.style.filter = `brightness(${brightnessVal + '%'})`;
-  elements.body.style.backdropFilter = `brightness(${brightnessVal + '%'})`;
+// Overlay para atenuar el brillo (solo se añade tras DOMContentLoaded)
+let brightnessOverlay;
+function createBrightnessOverlay() {
+  if (document.getElementById('brightness-overlay')) return;
+  brightnessOverlay = document.createElement('div');
+  brightnessOverlay.id = 'brightness-overlay';
+  brightnessOverlay.style.position = 'fixed';
+  brightnessOverlay.style.top = 0;
+  brightnessOverlay.style.left = 0;
+  brightnessOverlay.style.width = '100vw';
+  brightnessOverlay.style.height = '100vh';
+  brightnessOverlay.style.pointerEvents = 'none';
+  brightnessOverlay.style.zIndex = 99999;
+  brightnessOverlay.style.background = 'black';
+  brightnessOverlay.style.opacity = '0';
+  brightnessOverlay.style.transition = 'opacity 0.2s';
+  document.body.appendChild(brightnessOverlay);
 }
-*/
+
+function updateBrightnessOverlay() {
+  if (!elements.brightness_range || !brightnessOverlay) return;
+  let val = parseInt(elements.brightness_range.value);
+  let opacity = 1 - (val - 20) / 80;
+  if (opacity < 0) opacity = 0;
+  if (opacity > 1) opacity = 1;
+  brightnessOverlay.style.opacity = opacity.toString();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Crear overlay solo cuando el DOM está listo
+  createBrightnessOverlay();
+  if (elements.brightness_range) {
+    elements.brightness_range.addEventListener('input', updateBrightnessOverlay);
+    updateBrightnessOverlay();
+  }
+  // Asegurar que spotlight esté oculto al cargar
+  if (elements.spotlight_search) {
+    elements.spotlight_search.style.display = 'none';
+  }
+  // Asegurar que la hora y fecha se muestren correctamente
+  if (typeof digi === 'function') {
+    digi();
+  }
+});
 
 /**************************************************************
  * macOS Tahoe - Logic + Shake to Find (Fixed for Dragging)
@@ -612,15 +657,63 @@ function calculate(value, display) {
   }
 }
 
-// App draggable
-$(function () {
-  $(".terminal").draggable();
-  $(".note").draggable();
-  $(".calculator").draggable();
-  $(".Vscode").draggable();
-  $(".maps").draggable();
-  $(".safari").draggable();
-  $(".music").draggable();
+
+// Dock drag-and-drop reordering (HTML5 for dock only)
+document.addEventListener('DOMContentLoaded', function () {
+  // Enable drag for dock icons only
+  const dock = document.querySelector('.dock');
+  if (dock) {
+    let dragged = null;
+    let dragOverIcon = null;
+    dock.querySelectorAll('.icon').forEach(icon => {
+      // Identify static icons by their dock label (Downloads and Trash)
+      const labelEl = icon.querySelector('.dock-label');
+      const name = labelEl ? labelEl.textContent.trim().toLowerCase() : '';
+      const isStatic = (name === 'downloads' || name === 'trash');
+      if (isStatic) {
+        // Make static: not draggable and visually indicate default cursor
+        icon.setAttribute('draggable', 'false');
+        icon.dataset.static = 'true';
+        icon.classList.add('static');
+        // Do not add drag/drop listeners for static items
+        return;
+      }
+
+      icon.setAttribute('draggable', 'true');
+      icon.addEventListener('dragstart', function (e) {
+        dragged = icon;
+        setTimeout(() => icon.classList.add('dragging'), 0);
+      });
+      icon.addEventListener('dragend', function (e) {
+        icon.classList.remove('dragging');
+        dragged = null;
+      });
+      icon.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragOverIcon = icon;
+      });
+      icon.addEventListener('drop', function (e) {
+        e.preventDefault();
+        if (dragged && dragged !== icon) {
+          const icons = Array.from(dock.querySelectorAll('.icon'));
+          const dropIndex = icons.indexOf(icon);
+          dock.insertBefore(dragged, dropIndex > icons.indexOf(dragged) ? icon.nextSibling : icon);
+        }
+        dragOverIcon = null;
+      });
+    });
+  }
+
+  // Restore draggable for app windows (jQuery UI)
+  if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
+    $(".terminal").draggable({ handle: ".window__taskbar" });
+    $(".note").draggable({ handle: ".window__taskbar" });
+    $(".calculator").draggable({ handle: ".window__taskbar" });
+    $(".Vscode").draggable({ handle: ".window__taskbar" });
+    $(".maps").draggable({ handle: ".window__taskbar" });
+    $(".safari").draggable({ handle: ".window__taskbar" });
+    $(".music").draggable({ handle: ".window__taskbar" });
+  }
 });
 
 // Date and time
