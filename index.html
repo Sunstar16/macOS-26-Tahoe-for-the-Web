@@ -1,73 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="apple-touch-icon" href="./icon/manifest/192x192.png" />
-      <meta name="apple-mobile-web-app-status-bar" content="#DCE9E9" />
-      <meta name="theme-color" content="#d1d1d1" />
-        
-    <title>Mac os in web!</title>
-
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="./icon/manifest/512x512.png"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&family=Roboto:wght@100&display=swap"
-      rel="stylesheet"
-    />
-
-<link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
-
-<style>
-  /* ESTO HACE QUE FUNCIONE EN WINDOWS/ANDROID/LINUX */
-  @font-face {
-    font-family: 'AppleColorEmojiLocal';
-    /* Ruta a tu carpeta fonts */
-    src: url('https://github.com/Sunstar16/macOS-26-Tahoe-for-the-Web/raw/refs/heads/main/fonts/AppleColorEmoji.ttf') format('truetype');
-    /* Importante: unicode-range asegura que no intente usar esta fuente para letras normales */
-    unicode-range: U+1F600-1F64F, U+1F300-1F5FF, U+1F680-1F6FF, U+2600-26FF, U+2700-27BF, U+1F900-1F9FF, U+1F018-1F0AF, U+1F1E6-1F1FF;
-  }
-
-  body, button, p, h2, input, .app_name, .dock-label {
-    /* El orden es vital: SF Pro para texto, luego tu archivo para emojis */
-    font-family: 'SF Pro Display', 'AppleColorEmojiLocal', -apple-system, BlinkMacSystemFont, sans-serif !important;
-    font-weight: 300; 
-  }
-</style>
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="apple-touch-icon" href="./icon/manifest/192x192.png" />
+  <meta name="apple-mobile-web-app-status-bar" content="#DCE9E9" />
+  <meta name="theme-color" content="#d1d1d1" />
     
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
-    />
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <title>Mac os in web!</title>
 
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="stylesheet" href="./Css/style.css" />
+  <link rel="shortcut icon" type="image/png" href="./icon/manifest/512x512.png" />
+  
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
 
-  </head>
+  <style>
+    @font-face {
+      font-family: 'AppleColorEmojiLocal';
+      /* Usamos ruta relativa sin el punto para máxima compatibilidad en GitHub Pages */
+      src: url('fonts/AppleColorEmoji.ttf') format('truetype');
+      /* Sin unicode-range para descartar que el navegador lo ignore por error de filtrado */
+      font-display: swap;
+    }
 
+    /* Aplicamos a TODOS los elementos posibles donde pueda haber un emoji */
+    body, button, p, h1, h2, h3, h4, h5, h6, input, .app_name, .dock-label, span, div, li, a {
+      font-family: 'SF Pro Display', 'AppleColorEmojiLocal', -apple-system, BlinkMacSystemFont, "Segoe UI Emoji", sans-serif !important;
+      font-weight: 300; 
+    }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&family=Roboto:wght@100&family=Source+Sans+Pro:wght@600&family=Raleway:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons|Material+Icons+Outlined" />
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="stylesheet" href="./Css/style.css" />
+</head>
   <body onload="digi(), calculateBattery()">
     <!-- <div id="loading"></div> -->
     <div class="navbar">
