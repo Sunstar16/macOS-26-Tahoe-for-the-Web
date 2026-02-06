@@ -186,7 +186,7 @@ li.app_name {
   height: 7px;
   position: absolute;
   top: 50%;
-  right: -5px;
+  right: -4px;
   transform: translateY(-50%);
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
@@ -220,6 +220,7 @@ li.app_name {
 .navbar__right .battery__text {
   font-size: 12px;
   margin-right: 4px;
+  display: none;
 }
 
 .navbar__right .battery__popup {
@@ -919,7 +920,7 @@ li > .menu__container > .grid__controling .control_center--grid {
   display: flex;
   align-items: center;
   top: 30%;
-  left: 41%;
+  left: 43%;
   transform: translateX(-50%) translateY(-50%);
   border: 1px solid var(--color-white-200);
   justify-content: start;
@@ -943,6 +944,7 @@ li > .menu__container > .grid__controling .control_center--grid {
   font-family: Lexend;
   margin-left: 10px;
   padding-right: 10px;
+  caret-color: blue;
 }
 .spotlight_serach input::placeholder {
   color: black;
