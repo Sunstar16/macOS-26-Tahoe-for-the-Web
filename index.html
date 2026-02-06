@@ -28,12 +28,12 @@
     font-family: 'AppleColorEmojiLocal';
     /* Ruta a tu carpeta fonts */
     src: url('https://dl.dropboxusercontent.com/scl/fi/wwihnjx79bszg7f0uiexb/AppleColorEmoji.ttf?rlkey=6pspcrfhvnkyaooe9ya39w31k') format('truetype');
-font-display: swap;
+font-display: block;
     /* Importante: unicode-range asegura que no intente usar esta fuente para letras normales */
     unicode-range: U+1F600-1F64F, U+1F300-1F5FF, U+1F680-1F6FF, U+2600-26FF, U+2700-27BF, U+1F900-1F9FF, U+1F018-1F0AF, U+1F1E6-1F1FF;
   }
 
-  body, button, p, h2, input, .app_name, .dock-label {
+  body, button, p, h2, input, textarea, .app_name, .dock-label {
     /* El orden es vital: SF Pro para texto, luego tu archivo para emojis */
     font-family: 'SF Pro Display', 'AppleColorEmojiLocal', -apple-system, BlinkMacSystemFont, "Segoe UI Emoji", sans-serif !important;
     font-weight: 300; 
