@@ -86,9 +86,9 @@ const vscodeApp = {
 const mapsApp = {
   app_name: document.querySelector("#map"),
   window: document.querySelector(".maps"),
-  full: document.querySelector(".full-map"),
-  close: document.querySelector(".close-map"),
-  backfull: document.querySelector(".backfull-map"),
+  full: document.querySelector(".maps .full-map"),
+  close: document.querySelector(".maps .close-map"),
+  backfull: document.querySelector(".maps .backfull-map"),
   point: document.querySelector("#point-maps"),
   opening: document.querySelector(".open-map"),
 };
