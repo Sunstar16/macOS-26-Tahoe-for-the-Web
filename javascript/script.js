@@ -104,6 +104,18 @@ const safariApp = {
   opening: document.querySelector(".open-safari"),
 };
 
+//Settings App
+// Settings App - Definición exacta siguiendo tu esquema
+const settingsApp = {
+  app_name: document.querySelector("#Settings-nav"), // ID en la barra superior (si existe)
+  window: document.querySelector(".settings-app"),
+  full: document.querySelector(".settings-app .full-map"),
+  close: document.querySelector(".settings-app .close-map"),
+  backfull: document.querySelector(".settings-app .backfull-map"),
+  point: document.querySelector("#point-settings"),
+  opening: document.querySelector(".open-settings"),
+};
+
 // Music App
 const musicApp = {
   app_name: document.querySelector("#Music-nav"),
@@ -422,6 +434,29 @@ safariApp.backfull.addEventListener("click", () => {
   handleMinimize(safariApp.window);
 });
 
+
+// Settings Event Listeners
+settingsApp.opening.addEventListener("click", () => {
+  open_window(settingsApp.window, settingsApp.point, settingsApp.app_name);
+});
+
+settingsApp.close.addEventListener("click", () => {
+  close_window(settingsApp.window, settingsApp.point, settingsApp.app_name);
+});
+
+// Al hacer clic en el botón verde (full), no ejecutamos ninguna función
+settingsApp.full.addEventListener("click", () => {
+  // No hace nada, botón deshabilitado
+  console.log("Maximizar deshabilitado en System Settings"); 
+});
+
+// Botón Amarillo (Minimizar) - Deshabilitado
+settingsApp.backfull.addEventListener("click", () => {
+  console.log("Minimizar deshabilitado en Music");
+  // Al no llamar a handleMinimize(settingsApp.window), no hará nada
+});
+
+
 // Music Event Listeners
 musicApp.opening.addEventListener("click", () => {
   open_window(musicApp.window, musicApp.point, musicApp.app_name);
@@ -708,11 +743,12 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
     $(".terminal").draggable({ handle: ".window__taskbar" });
     $(".note").draggable({ handle: ".window__taskbar" });
-    $(".calculator").draggable({ handle: ".window__taskbar" });
+    $(".calculator").draggable({ handle: ".calculator__top" });
     $(".Vscode").draggable({ handle: ".window__taskbar" });
     $(".maps").draggable({ handle: ".window__taskbar" });
     $(".safari").draggable({ handle: ".window__taskbar" });
     $(".music").draggable({ handle: ".window__taskbar" });
+    $(".settings-app").draggable({ handle: ".settings_window__taskbar" });
   }
 });
 
