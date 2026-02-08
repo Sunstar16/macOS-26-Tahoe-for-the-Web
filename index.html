@@ -121,6 +121,8 @@ font-display: block;
         <li class="leftLi app_name" id="Music-nav">Music
         </li>
 
+        <li class="leftLi app_name" id="Settings-nav">System Settings
+        </li>
 <li class="leftLi">
           Finder
           <ul>
@@ -538,14 +540,13 @@ font-display: block;
         />
         <hr class="point" id="point-terminal" />
       </button>
-      <button class="icon">
-      <span class="dock-label">System Settings</span>
-        <img
-          src="./icon/dock/preferences.png"
-          alt="Preferences Logo"
-          class="hidden"
-        />
-      </button>
+
+<button class="icon open-settings" id="settings-icon">
+  <span class="dock-label">System Settings</span>
+  <img src="./icon/dock/preferences.png" alt="Settings" />
+  <span class="point hidden" id="point-settings"></span>
+</button>
+
       <hr class="column hidden" />
 	    <button class="icon">
       <span class="dock-label">Downloads</span>
@@ -864,6 +865,56 @@ font-display: block;
       </div> -->
       <!-- Vscode app end -->
       
+
+<div class="settings-app window-style" style="display: none;">
+  <div class="settings_window__taskbar ui-draggable-handle">
+    <div class="window__taskbar--actions">
+      <button class="close-map red-radius"></button>
+      <button class="backfull-map yellow-radius"></button>
+      <button class="full-map green-radius"></button>
+    </div>
+    <div class="window__taskbar--content">
+      <p></p>
+    </div>
+  </div>
+
+  <div class="content settings-layout">
+    <aside class="settings-sidebar">
+      <div class="s-search">
+<svg width="24" height="24">
+    <path d="M10,18c1.846,0,3.543-0.635,4.897-1.688l4.396,4.396l1.414-1.414l-4.396-4.396C17.365,13.543,18,11.846,18,10 c0-4.411-3.589-8-8-8s-8,3.589-8,8S5.589,18,10,18z M10,4c3.309,0,6,2.691,6,6s-2.691,6-6,6s-6-2.691-6-6S6.691,4,10,4z"></path>
+  </svg>
+<input type="text" placeholder="Search"></div>
+      <nav class="s-nav">
+        <div class="s-item active">🎨 Appearance</div>
+        <div class="s-item">🖼️ Wallpaper</div>
+        <div class="s-item">☀️ Displays</div>
+      </nav>
+    </aside>
+    <main class="settings-main">
+<div class="arrow-button-group">
+<div class="arrow-button-background">
+  <button class="arrow-circle-btn">
+    <img src="icon/symbols/Back-Symbol.png" alt="Back">
+  </button>
+
+  <button class="arrow-circle-btn">
+    <img src="icon/symbols/Forward-Symbol.png" alt="Forward">
+  </button>
+</div>
+</div>
+      <h1>Coming Soon...</h1>
+      <div class="s-card">
+        <div class="s-row">
+          <span>Stay Tuned!</span>
+          <div class="s-switch active"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+
       <div class="window maps">
         <div class="window__taskbar">
           <div class="window__taskbar--actions">
