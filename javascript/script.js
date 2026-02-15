@@ -876,13 +876,13 @@ function rightClick(e) {
 
 /********** Start Battery **********/
 const calculateBattery = () => {
-  let number = Math.floor(Math.random() * 100); // If there is any error, it will be the random default battery level
-  let batteryIsCharging = false; // Charging status
+  let number = Math.floor(Math.random() * 100); 
+  let batteryIsCharging = false; 
 
   navigator
     .getBattery()
     .then(function (battery) {
-      number = battery.level * 100;
+      number = Math.floor(battery.level * 100); // Añadido Math.floor para evitar decimales largos
 
       batteryIsCharging = battery.charging;
       battery.addEventListener("chargingchange", function () {
@@ -904,13 +904,95 @@ const calculateBattery = () => {
     });
 };
 
-elements.batteryButton.addEventListener("click", () => {
+// 1. Función para cerrar el popup limpiamente
+const closeBatteryPopup = () => {
+  elements.batteryPopup.classList.remove("opened");
+  elements.batteryButton.classList.remove("selected");
+};
+
+// 2. Listener del botón (con stopPropagation para evitar que el clic llegue al document)
+elements.batteryButton.addEventListener("click", (e) => {
+  e.stopPropagation(); 
   elements.batteryPopup.classList.toggle("opened");
   elements.batteryButton.classList.toggle("selected");
 });
+
+// 3. Evitar que al hacer clic DENTRO del popup abierto se cierre
+elements.batteryPopup.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+// 4. Clic en cualquier otro lugar (Escritorio/Wallpaper) cierra el popup
+document.addEventListener("click", () => {
+  closeBatteryPopup();
+  closeControlCenter();
+});
+
 /********** End Battery **********/
+
+// 1. Seleccionamos los elementos
+const controlCenterBtn = document.querySelector(".control-center");
+const controlCenterMenu = document.querySelector(".menu__container");
+
+// 2. Función para cerrar el Control Center
+const closeControlCenter = () => {
+  controlCenterMenu.classList.remove("opened");
+};
+
+// 3. Evento para el botón del Control Center
+controlCenterBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // Evita que el clic llegue al document
+  
+  // Cerramos el menú de batería si está abierto para que no se solapen
+  if (typeof closeBatteryPopup === "function") closeBatteryPopup();
+  
+  controlCenterMenu.classList.toggle("opened");
+});
+
+// 4. Evitar que el menú se cierre al hacer clic en los sliders o botones internos
+controlCenterMenu.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+// 1. EL BOTÓN (La Lupa)
+elements.open_spotlight.onclick = (e) => {
+    // ESTO ES LO MÁS IMPORTANTE:
+    // Detiene TODOS los demás scripts que quieran actuar sobre este clic
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    const isOpen = elements.spotlight_search.classList.contains("opened");
+
+    if (isOpen) {
+        elements.spotlight_search.classList.remove("opened");
+    } else {
+        // Cerramos otros menús si estuvieran abiertos
+        if (elements.batteryPopup) elements.batteryPopup.classList.remove("opened");
+        const cc = document.querySelector(".menu__container");
+        if (cc) cc.classList.remove("opened");
+
+        // Abrimos Spotlight
+        elements.spotlight_search.classList.add("opened");
+        
+        // Foco al input
+        const input = elements.spotlight_search.querySelector("input");
+        if (input) setTimeout(() => input.focus(), 50);
+    }
+};
+
+// 2. EL BUSCADOR (Para que no se cierre al escribir)
+elements.spotlight_search.onclick = (e) => {
+    e.stopImmediatePropagation();
+};
+
+// 3. EL CIERRE GLOBAL (Al clicar en el fondo de pantalla)
+document.addEventListener("click", (e) => {
+    // Si el menú está abierto, lo quitamos
+    if (elements.spotlight_search.classList.contains("opened")) {
+        elements.spotlight_search.classList.remove("opened");
+    }
+}, true); // El 'true' aquí le da prioridad al navegador para limpiar
 
 // Call the functions
 calculateBattery();
 digi();
-
