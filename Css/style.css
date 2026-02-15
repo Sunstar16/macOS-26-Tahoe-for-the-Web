@@ -46,7 +46,7 @@ body {
   background: url("../background/iridescence.jpg") center/cover no-repeat;
   overflow: hidden;
   /* Cambio mínimo: Ruta relativa a tu archivo PNG */
-  cursor: url('../cursor/normal-select.png'), auto;
+  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 /* Nueva clase para el efecto de cursor grande de macOS Tahoe */
@@ -237,16 +237,18 @@ li.app_name {
   -webkit-backdrop-filter: blur(60px);
   backdrop-filter: blur(60px);
   border-radius: 8px;
+  pointer-events: none;
 }
 
 .navbar__right .battery__popup.opened {
   opacity: 1;
-border-radius: 18px;
-background: var(--color-white-400);
-border: 1px solid var(--color-white-200);
-backdrop-filter: blur(5px);
-box-shadow: none;
-text-shadow: none;
+  border-radius: 18px;
+  background: var(--color-white-400);
+  border: 1px solid var(--color-white-200);
+  backdrop-filter: blur(5px);
+  box-shadow: none;
+  text-shadow: none;
+  pointer-events: auto;
 }
 
 .navbar__right .battery__popup header {
@@ -372,8 +374,9 @@ li > ul > li > button:active {
   background-color: #0063f7;
 }
 
+/* TU DISEÑO ORIGINAL RESTAURADO */
 li > .menu__container {
-  display: none;
+  display: block !important;
   position: absolute;
   width: 380px;
   border-radius: 0px;
@@ -383,10 +386,17 @@ li > .menu__container {
   transform: translateX(50%);
   overflow: hidden;
   padding: 15px;
+  
+  /* Solo esto para el control de apertura */
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
 }
 
-li:hover .menu__container {
-  display: flex;
+/* Esta clase es la que usaremos para mostrarlo sin romper el block !important */
+li > .menu__container.opened {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 li > .menu__container > .grid__controling {
@@ -567,8 +577,9 @@ li > .menu__container > .grid__controling .control_center--grid {
   height: 64px;
   transform: translateX(-50%);
   backdrop-filter: url(#glass-distortion) blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: url('../cursor/normal-select.png'), auto !important;
   border-radius: 22px;
   z-index: 10;
   background: rgba(255, 255, 255, 0.15);
@@ -608,7 +619,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 }
 
 .dock .column {
-  width: 0.08rem;
+  width: 0.06rem;
   height: 50px;
   margin: 0 4px;
   background: rgba(0, 0, 0, 0.6);
@@ -616,6 +627,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 
 .dock .icon {
   position: relative;
+  cursor: url('../cursor/normal-select.png'), auto !important;
   display: grid;
   place-items: center;
   background: none;
@@ -714,6 +726,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 .window__taskbar--actions button:nth-child(1) {
   background-color: #ff5f56;
   box-shadow: 0 0 0 0.5px #e0443e;
+  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 .window__taskbar--actions button::after {
@@ -734,6 +747,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 .window__taskbar--actions button:nth-child(2) {
   background-color: #ffbd2e;
   box-shadow: 0 0 0 0.5px #dea123;
+  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 .window__taskbar--actions button:nth-child(2)::after {
@@ -747,6 +761,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 .window__taskbar--actions button:nth-child(3) {
   background-color: #27c93f;
   box-shadow: 0 0 0 0.5px #1aab29;
+  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 .window__taskbar--actions button:nth-child(3)::after {
@@ -788,7 +803,7 @@ li > .menu__container > .grid__controling .control_center--grid {
   height: 91%;
   overflow-y: scroll;
   padding-left: 1rem;
-  background-color: rgba(0, 0, 15, 0.7);
+  background-color: rgba(42, 46, 56, 0.9);
   backdrop-filter: blur(12px);
   color: rgb(235, 235, 235);
   font-size: 20px;
@@ -851,7 +866,7 @@ li > .menu__container > .grid__controling .control_center--grid {
 
 .window .content {
   width: 100%;
-  height: 92%;
+  height: 95%;
   display: flex;
 }
 
@@ -930,8 +945,16 @@ li > .menu__container > .grid__controling .control_center--grid {
   backdrop-filter: blur(5px);
   z-index: 11 !important;
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
+.spotlight_serach.opened {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
 
 
 .spotlight_serach svg {
