@@ -1,0 +1,2042 @@
+:root {
+  --color-white: #fff;
+  --color-white-100: rgba(255, 255, 255, 0.1);
+  --color-white-200: rgba(255, 255, 255, 0.2);
+  --color-white-400: rgba(255, 255, 255, 0.4);
+  --color-white-800: rgba(255, 255, 255, 0.8);
+  --color-white-900: rgba(255, 255, 255, 0.9);
+  --color-black: #1e1e1e;
+  --color-black-100: rgba(0, 0, 0, 0.1);
+  --color-black-50: rgba(211, 197, 197, 0.39);
+  --color-black-200: rgba(0, 0, 0, 0.2);
+  --color-black-500: rgba(0, 0, 0, 0.5);
+  --color-black-600: rgba(0, 0, 0, 0.6);
+  --color-blue-800: #007ff7;
+  --app-color-white: rgb(252, 255, 251);
+  --color-red: rgba(255, 2, 2, 0.788);
+  --color-green: #11dd4e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  border: 0;
+  list-style: none;
+}
+
+@media screen and (max-width: 900px) {
+  .hidden {
+    display: none;
+  }
+}
+
+button,
+input {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  height: 100vh;
+  user-select: none;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+  background: url("../background/iridescence.jpg") center/cover no-repeat;
+  overflow: hidden;
+  /* Cambio mínimo: Ruta relativa a tu archivo PNG */
+  cursor: url('../cursor/normal-select.png'), auto !important;
+}
+
+/* Nueva clase para el efecto de cursor grande de macOS Tahoe */
+.cursor-big, .cursor-big * {
+  cursor: url('../cursor/normal-select-big.png'), auto;
+}
+
+
+#loading {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: url(../background/lock.gif) center/cover no-repeat;
+  z-index: 9999;
+}
+
+.navbar {
+  width: 100%;
+  padding: 0.1rem 90;
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: var(--color-white-900);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20;
+  animation: top-to-bottom 0.3s;
+}
+
+.navbar > ul {
+  display: flex;
+  align-items: center;
+}
+
+.navbar li {
+  position: relative;
+  font-size: 14px;
+  margin: 0 4px;
+  cursor: url(../cursor/Link.cur), pointer;
+  transition: 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.navbar .leftLi.logo img {
+  transform: translateY(1px);
+  width: 17px;
+  height: 18px;
+}
+
+.navbar svg {
+  fill: var(--color-white);
+}
+
+.navbar .leftLi {
+  padding: 3px 6px;
+}
+
+.navbar .leftLi a {
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.navbar .leftLi a:hover {
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+.navbar .leftLi:hover {
+  color: var(--color-white);
+  border-radius: 10px;
+  background-color: var(--color-white-200);
+}
+
+li.app_name {
+  display: none;
+  font-weight: 900 !important;
+}
+
+.navbar__right li {
+  margin: 0 5px;
+  left: 3px
+}
+
+.navbar__right li svg {
+  transform: scale(0.8);
+}
+
+.wifi svg {
+  transform: translateY(1px) scale(0.8) !important;
+}
+
+.navbar__right .clock #clock {
+  margin-left: 15px;
+  margin-right: 6px;
+}
+
+.navbar__right li .control-center {
+  width: 32px;
+  height: 19px;
+  transform: scale(0.8) translateY(1px);
+}
+
+.navbar__right .battery {
+  margin: 0;
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  border-radius: 4px;
+  align-items: center;
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  transition: all ease-out 0.2s;
+}
+.navbar__right .battery.selected {
+  background: var(--color-white-200);
+  border-radius: 10px;
+}
+
+.navbar__right .battery__container {
+  width: 22px;
+  height: 10px;
+  padding: 1px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.navbar__right .battery__container::after {
+  content: "";
+  background: rgba(255, 255, 255, 0.4);
+  width: 3px;
+  height: 7px;
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  transform: translateY(-50%);
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.navbar__right .battery__progress {
+  height: 100%;
+  display: flex;
+  background: white;
+  border-radius: 2px;
+}
+
+.navbar__right .battery__progress .is-charging {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.is-charging-visible {
+  display: block !important;
+}
+
+.navbar__right .battery__low {
+  background-color: var(--color-red);
+}
+
+.navbar__right .battery__high {
+  background-color: var(--color-green);
+}
+
+.navbar__right .battery__text {
+  font-size: 12px;
+  margin-right: 4px;
+  display: none;
+}
+
+.navbar__right .battery__popup {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  opacity: 0;
+  width: 220px;
+  transition: all ease-out 0.2s;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.navbar__right .battery__popup.opened {
+  opacity: 1;
+  border-radius: 18px;
+  background: var(--color-white-400);
+  border: 1px solid var(--color-white-200);
+  backdrop-filter: blur(5px);
+  box-shadow: none;
+  text-shadow: none;
+  pointer-events: auto;
+}
+
+.navbar__right .battery__popup header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.navbar__right .battery__popup header h3 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.navbar__right .battery__popup header span {
+  opacity: 0.75;
+  font-size: 12px;
+}
+
+.navbar__right .battery__popup p {
+  font-size: 11px;
+  margin-top: 4px;
+  padding: 0 10px;
+}
+
+.navbar__right .battery__popup hr {
+  margin: 6px 8px;
+  border: 0;
+  border-radius: 99px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar__right .battery__popup button {
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  color: white;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+
+.navbar__right .battery__popup button:hover {
+  background-color: var(--color-blue-800);
+  border-radius: 18px;
+}
+
+.navbar__right .battery__popup button:active {
+  background-color: #0063f7;
+}
+
+
+li > ul {
+  display: none;
+  position: absolute;
+  align-items: center;
+  flex-direction: column;
+  left: 0;
+  top: 100%;
+  margin-top: 1px;
+  font-weight: 600;
+  padding: 4px;
+  min-width: 266px;
+  background: var(--color-white-400);
+  border: 1px solid var(--color-white-400);
+  backdrop-filter: blur(6px);
+  border-radius: 18px;
+  box-shadow: inset 0 0 50px 1px hsl(0, 0%, 100%, 0.5);
+}
+
+li:hover > ul {
+  display: flex;
+}
+
+#apple-menu-bar > #apple-menu-dropdown {
+  display: none;
+  top: 100% !important;
+  margin-top: 0 !important;
+  z-index: 100;
+}
+
+li > ul > li {
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 5px;
+  margin-bottom: 5px !important;
+}
+
+li > ul > li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+li > ul > li > button {
+  color: var(--color-black);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+  font-weight: 100;
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: 80ms;
+  font-size: 14px;
+  cursor: url(../cursor/Link.cur), pointer;
+  padding-left: 21px;
+}
+
+/* Cuando pasas el mouse por el botón, el texto del botón Y sus hijos se vuelven blancos */
+li > ul > li > button:hover,
+li > ul > li > button:hover * {
+  color: var(--color-white) !important;
+  background: var(--color-blue-800);
+  border-radius: 8px;
+}
+
+li > ul > li > button:active {
+  background-color: #0063f7;
+}
+
+/* TU DISEÑO ORIGINAL RESTAURADO */
+li > .menu__container {
+  display: block !important;
+  position: absolute;
+  width: 380px;
+  border-radius: 0px;
+  top: 100%;
+  right: 50%;
+  height: 24rem;
+  transform: translateX(50%);
+  overflow: hidden;
+  padding: 15px;
+  
+  /* Solo esto para el control de apertura */
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Esta clase es la que usaremos para mostrarlo sin romper el block !important */
+li > .menu__container.opened {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+li > .menu__container > .grid__controling {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-areas:
+    "Toggles Toggles DoNotDisturb DoNotDisturb"
+    "Toggles Toggles KeyboardBrightness Battery"
+    "Display Display Display Display"
+    "Audio Audio Audio Audio"
+    "Music Music Music Music";
+  grid-gap: 1em 1em;
+}
+li > .menu__container > .grid__controling .control_center--grid {
+  display: grid;
+  border: 1px solid rgba(255, 255, 255, 0.178);
+  overflow: hidden;
+  border-radius: 32px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px); 
+  box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.05), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.05);
+}
+.menu__container > .grid__controling .col-5 {
+  grid-area: Toggles;
+}
+.menu__container > .grid__controling .col-7 {
+  grid-area: DoNotDisturb;
+}
+
+.menu__container > .grid__controling .col-3--brightness {
+  grid-area: KeyboardBrightness;
+}
+.menu__container > .grid__controling .col-3--battery {
+  grid-area: Battery;
+}
+
+.menu__container > .grid__controling .col-12--light {
+  grid-area: Display;
+}
+.menu__container > .grid__controling .col-12--volume {
+  grid-area: Audio;
+}
+.menu__container > .grid__controling .col-12--music {
+  grid-area: Music;
+}
+
+.grid__controling .control_center--grid button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  font-size: 20px;
+  transition: all 120ms ease-in-out;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+  cursor: url(../cursor/Link.cur), pointer;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+.sound,
+.brightness {
+  position: relative;
+}
+
+.menu__container > .grid__controling input[type="range"] {
+  -webkit-appearance: none;
+  outline: 0;
+  border: 0;
+}
+.sound img {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translatey(-50%);
+}
+.brightness img {
+  /* z-index: -1; */
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translatey(-50%);
+}
+.menu__container > .grid__controling input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 2rem;
+  width: 2rem;
+  background-color: var(--color-white);
+  box-shadow: -2px 0px 3px -2px #5f6063, -340px 0 0 320px #ffffff;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.226);
+  cursor: pointer;
+}
+
+.grid__controling input[type="range"]::-webkit-slider-runnable-track {
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.404);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.grid__controling .control_center--grid button p {
+  display: block;
+  font-size: 14px;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+}
+.nobtn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.nobtn svg {
+  background-color: transparent !important;
+}
+
+.grid__controling .control_center--grid button svg {
+  background-color: var(--color-blue-800);
+  padding: 5px;
+  border-radius: 50%;
+  margin: 0 5px;
+}
+.col-7 button svg {
+  background-color: #5E5CDD !important;
+}
+.col-7 button:focus {
+  background: #5E5CDD !important;
+  color: var(--color-white);
+}
+
+.grid__controling .control_center--grid button:focus {
+  background: var(--color-blue-800);
+  color: var(--color-white);
+}
+
+.grid__controling .control_center--grid .musicPlayer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.musicPlayer--image {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.musicPlayer--image img {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+.musicPlayer--content {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.musicPlayer--content span {
+  font-size: 40px;
+}
+
+@media screen and (max-width: 600px) {
+  .navbar__right .clock #clock {
+    margin-left: 0;
+  }
+}
+
+.dock {
+display: flex;
+align-items: center;
+position: fixed;
+padding: 0.2rem 0.4rem 0px;
+bottom: 1%;
+left: 50%;
+height: 64px;
+transform: translateX(-50%);
+backdrop-filter: url("#glass-distortion") blur(3.2px);
+-webkit-backdrop-filter: blur(3.2px);
+border: 0.5px solid rgba(255, 255, 255, 0.001);
+border-radius: 20px;
+z-index: 11;
+background-image: url("../background/DockBackground75.png");
+background-size: 101.45% 121%;
+background-position: -8px -7.3px;
+cursor: url("../cursor/normal-select.png"), auto !important;
+}
+
+
+@media screen and (max-width: 900px) {
+  .dock {
+    border-radius: 20px;
+  }
+}
+
+.dock .point {
+  position: absolute;
+  margin-bottom: -60px;
+  width: 5px;
+  height: 5px;
+  margin-top: -6px;
+  background-color: var(--color-black-600);
+  border-radius: 50%;
+  display: none;
+  animation: top-to-bottom 0.3s;
+  transition: 0.3s;
+}
+
+.dock .icon #point-finder {
+  display: block; /* Fuerza la visibilidad */
+  visibility: visible;
+  opacity: 1;
+}
+
+
+#point-launchpad {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+.dock .column {
+  width: 0.06rem;
+  height: 50px;
+  margin: 0 4px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dock .icon {
+  position: relative;
+  cursor: url('../cursor/normal-select.png'), auto !important;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  outline: none;
+  transition: all 0.3s;
+  /* transform: translate3d(0px, 0%, 0px); */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dock .icon img {
+  width: 3.6rem;
+  transition: 0.2s;
+  transform: translateY(-2.5px);
+}
+
+.dock .icon:hover img {
+  margin: 0 0 40px 0;
+  width: 7.1rem;
+}
+
+.dock .icon:hover + * img {
+  width: 5.6rem;
+  margin: 0 0 25px 0;
+}
+
+.dock .icon:has(+ *:hover) img {
+  width: 5.6rem;
+  margin: 0 0 25px 0;
+}
+
+.dock .icon img:active {
+
+/* Make Downloads/Trash visually static when not draggable */
+.dock .icon.static {
+  cursor: default;
+  -webkit-user-drag: none;
+}
+  filter: brightness(0.6) drop-shadow(0 0 10px #2c2c2c);
+}
+
+.container__Window {
+  width: 100%;
+  height: 90%;
+  justify-content: space-around;
+  align-items: center;
+  display: none;
+}
+
+.window {
+  display: none;
+  min-width: 50%;
+  max-width: 80%;
+  height: 430px;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: transparent;
+  box-shadow: 0 20px 30px var(--color-black-500);
+  border: 1px solid #ffffff34;
+  animation: zoom-out 0.3s;
+  z-index: 10;
+  touch-action: none;
+}
+
+.window__taskbar {
+  height: 6%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  background-color: var(--app-color-white);
+}
+.window__taskbar--actions {
+  display: flex;
+  align-items: center;
+}
+
+.window__taskbar:hover button::after {
+  color: #000;
+}
+
+.window__taskbar--actions button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0.8rem;
+  height: 0.8rem;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.window__taskbar--actions button:not(:last-child) {
+  margin-right: 8px;
+}
+
+.window__taskbar--actions button:nth-child(1) {
+  background-color: #ff5f56;
+  box-shadow: 0 0 0 0.5px #e0443e;
+  cursor: url('../cursor/normal-select.png'), auto !important;
+}
+
+.window__taskbar--actions button::after {
+  display: block;
+  font-size: 14px;
+  color: transparent;
+  font-weight: 900;
+}
+
+.window__taskbar--actions button:nth-child(1)::after {
+  content: "×";
+}
+
+.window__taskbar--actions button:nth-child(1):hover {
+  background-color: #fc3c32;
+}
+
+.window__taskbar--actions button:nth-child(2) {
+  background-color: #ffbd2e;
+  box-shadow: 0 0 0 0.5px #dea123;
+  cursor: url('../cursor/normal-select.png'), auto !important;
+}
+
+.window__taskbar--actions button:nth-child(2)::after {
+  content: "−";
+}
+
+.window__taskbar--actions button:nth-child(2):hover {
+  background-color: #ffa600;
+}
+
+.window__taskbar--actions button:nth-child(3) {
+  background-color: #27c93f;
+  box-shadow: 0 0 0 0.5px #1aab29;
+  cursor: url('../cursor/normal-select.png'), auto !important;
+}
+
+.window__taskbar--actions button:nth-child(3)::after {
+  content: "⤡";
+}
+
+.window__taskbar--actions button:nth-child(3):hover {
+  background-color: #12aa29;
+}
+
+.window__taskbar--content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.window__taskbar--content h2 {
+  color: var(--color-black);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.terminal .window__taskbar,
+.Vscode .window__taskbar,
+.maps .window__taskbar {
+  height: 9%;
+}
+
+.terminal .window__taskbar--content h2 {
+    color: var(--color-black);
+    font-size: 18px;
+    font-weight: 100;
+}
+
+.terminal_content {
+  width: 100%;
+  height: 91%;
+  overflow-y: scroll;
+  padding-left: 1rem;
+  background-color: rgba(42, 46, 56, 0.9);
+  backdrop-filter: blur(12px);
+  color: rgb(235, 235, 235);
+  font-size: 20px;
+  font-family: "Roboto Mono", monospace, 'AppleColorEmojiLocal';
+}
+
+.color_green {
+  color: green;
+}
+
+.color_blue {
+  color: #1f48ff;
+}
+
+.window__taskbar--right {
+  width: 60%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+@media screen and (max-width: 900px) {
+  .window__taskbar--right {
+    width: 70%;
+  }
+}
+.Customize__icon span {
+  border: 1px solid rgba(204, 200, 200, 0.412);
+  border-radius: 9px;
+  transition: 0.2s;
+  padding: 5px;
+  cursor: url(../cursor/Link.cur), pointer;
+}
+
+.window__taskbar--right .containerSearch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 45%;
+  height: 75%;
+  background-color: var(--app-color-white);
+  border-radius: 5px;
+  border: 1px solid rgba(123, 123, 123, 0.412);
+  padding-left: 8px;
+}
+.window__taskbar--right .containerSearch svg {
+  fill: rgba(123, 123, 123, 0.412);
+}
+.window__taskbar--right input[type="search"] {
+  width: 85%;
+  height: 100%;
+  background-color: transparent;
+  color: var(--color-black);
+  font-size: 18px;
+  padding-right: 10px;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+}
+
+.window .content {
+  width: 100%;
+  height: 95%;
+  display: flex;
+}
+
+.Parent__content--typing {
+  width: 70%;
+  height: 100%;
+  border-top: 1px solid #e0e2e1;
+  background-color: var(--app-color-white);
+}
+
+.content__typing {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  display: none;
+  color: var(--color-black);
+  font-weight: 900;
+  font-size: 18px;
+  font-family: "Raleway", sans-serif, 'AppleColorEmojiLocal';
+  padding: 16px;
+}
+
+.content__sidebar {
+  width: 30%;
+  height: 100%;
+  background: var(--color-white-400);
+  backdrop-filter: blur(1rem);
+}
+
+.content__sidebar--notes {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: transparent;
+}
+
+.content__sidebar--notes input {
+  width: 85%;
+  padding-left: 10px;
+  height: 10%;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+  font-size: 18px;
+  outline: none;
+  color: var(--color-black);
+  transition: all 0.2s;
+  border-radius: 4px;
+  margin: 10px auto;
+  font-weight: 100;
+  display: block;
+  transition: 0.3s;
+}
+.content__sidebar--notes input:hover {
+  background-color: rgba(0, 0, 0, 0.336);
+}
+
+.content__sidebar--notes input::placeholder {
+  color: white;
+}
+
+.spotlight_serach {
+  position: absolute !important;
+  width: 400px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  top: 30%;
+  left: 43%;
+  transform: translateX(-50%) translateY(-50%);
+  border: 1px solid var(--color-white-200);
+  justify-content: start;
+  border-radius: 100px;
+  background: rgba(200, 235, 255, 0.9);
+  backdrop-filter: blur(5px);
+  z-index: 11 !important;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.spotlight_serach.opened {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+
+.spotlight_serach svg {
+  margin-left: 10px;
+  opacity: 40%;
+}
+.spotlight_serach input {
+  width: 90%;
+  font-size: 20px;
+  font-weight: 100;
+  font-family: Lexend, 'AppleColorEmojiLocal';
+  margin-left: 10px;
+  padding-right: 10px;
+}
+.spotlight_serach input::placeholder {
+  color: black;
+  opacity: 40%;
+}
+
+.launchpad {
+  display: none;
+  animation: opacity 300ms;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.searchbox {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchbox .searchContainer {
+  height: 30px;
+  width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 2px solid var(--color-white-200);
+  border-radius: 16px;
+  padding: 0 3px;
+}
+
+.searchbox .searchContainer svg {
+  fill: #fff;
+}
+
+.searchbox input {
+  text-align: center;
+  color: #fff;
+  font-size: 17px;
+  height: 100%;
+  font-family: "Roboto", sans-serif, 'AppleColorEmojiLocal';
+  left: -4px;
+  position: relative;
+}
+
+.searchbox input::placeholder {
+  color: #fff;
+  font-weight: 100;
+}
+
+.searchbox input:focus {
+  text-align: left;
+}
+
+.Apps-container {
+  width: 90%;
+  height: 74%;
+  margin: 0 auto;
+  margin-top: -1%;
+  display: grid;
+  grid-row-gap: 10px;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.launchpad .child-launchpad {
+  display: flex;
+  place-items: center;
+  flex-direction: column;
+  cursor: url(../cursor/Link.cur), pointer;
+}
+
+.launchpad .child-launchpad img {
+  width: 80px;
+}
+
+@media screen and (min-width: 1200px) {
+  .launchpad .Apps-container {
+    position: relative;
+    top: 18px;
+    grid-row-gap: 20px;
+  }
+  .launchpad .child-launchpad img {
+    width: 80px;
+  }
+  .launchpad .child-launchpad strong {
+    font-size: 18px;
+  }
+}
+
+.launchpad .child-launchpad:active {
+  animation: vibrate 0.1s ease-in forwards infinite alternate;
+  transition: transform 0.1s cubic-bezier(0.42, 0, 1, 0.2);
+}
+
+.launchpad .child-launchpad strong {
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  background-color: #fff;
+  width: 16px;
+}
+
+/* background of the scrollbar except button or resizer */
+::-webkit-scrollbar-track {
+  background-color: #fff;
+}
+
+/* scrollbar itself */
+::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
+  border: 4px solid #fff;
+}
+
+/* set button(top and bottom of the scrollbar) */
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/******Animations*****/
+
+@keyframes zoom-out {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes to-top-bottom {
+  0% {
+    transform: translate(0);
+  }
+  25% {
+    transform: translateY(-12px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  75% {
+    transform: translateY(-21px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes vibrate {
+  0% {
+    transform: rotate(9deg);
+  }
+  100% {
+    transform: rotate(-9deg);
+  }
+}
+
+@keyframes top-to-bottom {
+  0% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes opacity {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* NUEVA: Animación de salida (Exactamente al revés) */
+@keyframes close-opacity {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+/* Clase que aplicaremos por JS para cerrar */
+.launchpad-closing {
+  animation: close-opacity 300ms forwards !important;
+}
+
+.calculator {
+  display: none;
+  width: 20rem;
+  max-width: 100%;
+  height: 25rem;
+  max-height: 80%;
+  background: var(--color-black-500);
+  backdrop-filter: blur(1rem);
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 2rem var(--color-black-500);
+  border: 1px solid var(--color-white-200);
+  animation: zoom-out 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.calculator__top {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+.calculator__top--taskabr {
+  height: 40px;
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+}
+
+.calculator__top--taskabr button {
+  position: relative;
+  width: 1px;
+  height: 1px;
+  padding: 8px;
+  border-radius: 50%;
+  margin-left: 8px;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calculator__top--taskabr button:nth-child(1) {
+  background-color: #ff6059;
+}
+
+.calculator__top--taskabr button:nth-child(1):hover {
+  background-color: #fc3c32;
+}
+
+.calculator__top--taskabr button:nth-child(2) {
+  background-color: #ffbd2e;
+}
+
+.calculator__top--taskabr button:nth-child(2):hover {
+  background-color: #ffa600;
+}
+
+.calculator__top--taskabr button:nth-child(3) {
+  background-color: #28c941;
+}
+
+.calculator__top--taskabr button:nth-child(3):hover {
+  background-color: #12aa29;
+}
+
+.calculator__top--taskabr button::after {
+  display: block;
+  font-size: 14px;
+  color: transparent;
+  font-weight: 900;
+  position: absolute;
+}
+
+.calculator__top--taskabr:hover button::after {
+  color: #000;
+}
+
+.calculator__top--taskabr button:nth-child(1)::after {
+  content: "×";
+}
+
+.calculator__top--taskabr button:nth-child(2)::after {
+  content: "−";
+}
+
+.calculator__top--taskabr button:nth-child(3)::after {
+  content: "⤡";
+}
+
+.calculator__top--output {
+  flex: 1;
+  color: var(--color-white);
+  font-size: 2rem;
+  text-align: right;
+  font-family: "Lexend", 'AppleColorEmojiLocal';
+  border: none;
+  background: transparent;
+  padding: 0 0.8rem;
+}
+
+.input {
+  width: 100%;
+  height: 70%;
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 20% 20% 20% 20% 20%;
+}
+
+.input .button {
+  width: 100%;
+  height: 100%;
+  font-size: 1.8rem;
+  font-family: "Montserrat, 'AppleColorEmojiLocal'";
+  font-weight: bold;
+  border: 1px solid rgba(95, 95, 95, 0.336);
+}
+
+.r-radius {
+  border-bottom-right-radius: 15px;
+}
+
+.large {
+  grid-column-start: span 2;
+  border-bottom-left-radius: 15px;
+}
+
+.operator {
+  background-color: #fd9e2a;
+  color: #fff;
+}
+
+.number {
+  background-color: #d6d6d6;
+  color: rgb(0, 0, 0);
+}
+
+.operator-2 {
+  background-color: #ccc9c9;
+  color: rgb(0, 0, 0);
+}
+
+.context-menu {
+  padding: 0 3px;
+  position: absolute;
+  border-radius: 18px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.281);
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+  background: var(--color-white-400);
+  padding-top: 10px;
+}
+
+.context-menu ul {
+  padding: 0;
+  margin: 0;
+  min-width: 250px;
+  list-style: none;
+}
+
+
+.context-menu ul li:last-child {
+  border: none;
+}
+
+.context-menu ul li button {
+  color: var(--color-white);
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  font-size: 15px;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+  border-radius: 5px;
+  padding: 4px 8px;
+  transition: 80ms;
+  font-weight: 300;
+  margin: 0 0 4px 0;
+  display: flex;
+  flex-direction: row;
+  cursor: url(../cursor/Link.cur), pointer;
+  color: black;
+}
+.context-menu ul button:hover {
+  background: var(--color-blue-800);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Aplicar el mismo estilo de separador a los elementos del menú contextual */
+.context-menu ul li {
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 5px;
+  margin-bottom: 5px !important;
+}
+
+/* Widgets panel */
+.widgets-panel {
+  position: fixed;
+  top: 42px;
+  right: 10px;
+  transform: translateX(115%);
+  transition: all 0.3s cubic-bezier(0.79, 0.14, 0.15, 0.86);
+  backdrop-filter: url(#glass-distortion) blur(4px);
+  -webkit-backdrop-filter: blur(1rem);
+  border: 1px solid var(--color-white-200);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.widgets-panel.open {
+  transform: translateX(0);
+}
+.widgets-panel__calendar {
+  background: transparent;
+  padding: 16px;
+  min-width: 160px;
+}
+.widgets-panel #taghvim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.widgets-panel__calendar h4 {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-left: 8px;
+  margin-bottom: -10px;
+}
+.widgets-panel__calendar h2 {
+  color: #ffffff;
+  font-size: 45px;
+  font-weight: 300;
+}
+.widgets-panel__calendar li {
+  position: relative;
+  padding: 4px 10px;
+  font-size: 15px;
+  border-radius: 4px;
+  margin-left: 8px;
+  margin: 8px 0;
+}
+.widgets-panel__calendar li::before {
+  content: "";
+  width: 8px;
+  height: calc(100% - 2px);
+  position: absolute;
+  border-radius: 99px;
+  top: 2px;
+  left: -12px;
+}
+.widgets-panel__calendar li.blue {
+  color: #34aadc;
+  background: #283646;
+}
+.widgets-panel__calendar li.blue::before {
+  background: #34aadc;
+}
+.widgets-panel__calendar li.green {
+  color: #32d74b;
+  background: #2d402e;
+}
+.widgets-panel__calendar li.green::before {
+  background: #32d74b;
+}
+.widgets-panel__calendar li.purple {
+  color: #9c5ffd;
+  background: #422948;
+}
+.widgets-panel__calendar li.purple::before {
+  background: #7a3edb;
+}
+.widgets-panel__calendar li span {
+  display: block;
+}
+.widgets-panel__calendar li span:first-child {
+  font-weight: bold;
+}
+/* 1. Ajustes del contenedor para el eje X y visibilidad */
+.dock .icon {
+  position: relative;
+  overflow: visible !important; /* Permite que la etiqueta salga del botón */
+  z-index: 1;
+}
+
+/* 2. Aseguramos que el icono con hover esté siempre por encima de sus vecinos */
+.dock .icon:hover {
+  z-index: 999;
+}
+
+/* 3. La etiqueta (Bocadillo gris claro) */
+.dock .icon .dock-label {
+  position: absolute;
+  bottom: 110%; /* Flota sobre el icono */
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  
+  /* Estilo visual exacto a tu imagen de referencia */
+  background-color: rgba(235, 235, 235, 0.75); /* Gris claro translúcido */
+  color: #1a1a1a; /* Texto oscuro para máxima legibilidad */
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif, 'AppleColorEmojiLocal';
+  white-space: nowrap;
+  
+  /* Efecto de cristal y profundidad */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+
+  /* Estado inicial (oculto) */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* No estorba al hacer clic */
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+/* 4. El pico del bocadillo (triángulo inferior) */
+.dock .icon .dock-label::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Justo debajo de la caja */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 7px;
+  border-style: solid;
+  /* El color debe coincidir con el fondo de la etiqueta */
+  border-color: rgba(235, 235, 235, 0.75) transparent transparent transparent;
+}
+
+/* 5. Activación del hover: aparece y sube ligeramente */
+.dock .icon:hover .dock-label {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-12px);
+}
+.grid__controling .control_center--grid button {
+display: flex;
+align-items: center;
+justify-content: flex-start;
+width: 100%;
+font-size: 20px;
+transition: all 120ms ease-in-out;
+font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+cursor: url(../cursor/Link.cur), pointer;
+border-top-left-radius: 24px;
+border-top-right-radius: 24px;
+border-bottom-right-radius: 24px;
+border-bottom-left-radius: 24px;
+color: white;
+}
+
+/* Safari App Window - Consistencia con macOS Tahoe */
+.safari {
+  flex-grow: 1;
+  width: 900px;
+  height: 550px;
+  background-color: var(--app-color-white);
+  top: 10%;
+  left: 20%;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: none; /* Importante: empieza oculto como Maps */
+  flex-direction: column;
+  overflow: hidden;
+}
+/* Ajuste del iframe para que ocupe el espacio restante bajo la taskbar */
+.safari iframe {
+  position: absolute;
+  flex-grow: 1; /* Esto hace que el iframe rellene todo el espacio disponible */
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  display: block;
+}
+
+.music {
+  flex-grow: 1;
+  width: 900px;
+  height: 478px;
+  background-color: var(--app-color-white);
+  top: 10%;
+  left: 20%;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: none; 
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Music App Iframe - Consistencia total con Safari */
+.music iframe {
+  position: absolute;
+  flex-grow: 1;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  display: block;
+}
+
+
+/* Animación de salida: de normal a grande y transparente */
+@keyframes close-opacity {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* Clase que usaremos en JS */
+.launchpad-closing {
+  animation: close-opacity 300ms forwards !important;
+}
+/********** About This Mac - Estilo Tahoe Final (Alineación Espejo) **********/
+
+/* Contenedor principal invisible */
+.window-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 9999;
+    pointer-events: none; 
+}
+
+/* La ventana física (Caja estilo cristal) */
+.about-content {
+    pointer-events: auto;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 330px; 
+    background: rgba(245, 245, 247, 1.85);
+    backdrop-filter: blur(35px);
+    -webkit-backdrop-filter: blur(35px);
+    opacity: 98%;
+    border-radius: 15px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(0,0,0,0.1);
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif, 'AppleColorEmojiLocal';
+    z-index: 10;
+}
+
+/* Cabecera para arrastrar */
+.window-header {
+    width: 100%;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    cursor: grab;
+}
+
+.window-header:active { cursor: grabbing; }
+
+/* Botón de cierre rojo */
+.close-btn {
+    position: absolute;
+    width: 13px; height: 13px;
+    background: #ff5f57;
+    border: 0.5px solid rgba(0,0,0,0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -8px;
+    left: 10px;
+}
+
+/* Cuerpo de la ventana */
+.about-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mac-icon {
+    width: 160px;
+    height: auto;
+    margin: 5px 0 10px 0;
+/* EVITA QUE LA IMAGEN SEA ARRASTRABLE HACIA AFUERA */
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none; /* Esto hace que el clic "atraviese" la imagen y llegue a la caja */
+}
+
+.mac-title {
+    font-size: 25px;
+    font-weight: 700;
+    margin: 0;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+}
+
+.mac-subtitle {
+    font-size: 10px;
+    color: #86868b;
+    margin: 4px 0 25px 0;
+}
+
+/* CONTENEDOR DE SPECS (El truco de la alineación) */
+.specs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.spec-row {
+    display: grid;
+    /* 1.1fr y 0.9fr para que el "choque" de textos sea central pero equilibrado */
+    grid-template-columns: 1.1fr 0.9fr; 
+    gap: 12px;
+}
+
+.spec-label {
+    position: relative;
+    left: -15px;
+    text-align: right;
+    font-weight: 356;
+    font-size: 11px;
+    color: #1d1d1f;
+}
+
+.spec-value {
+    position: relative;
+    text-align: left;
+    font-size: 11px;
+    color: #434344;
+    left: -16px;
+    margin-top: -0.5px;
+}
+
+/* BOTÓN MÁS INFORMACIÓN */
+.more-info-btn {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 5px 14px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d1d1f;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+
+.more-info-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* TEXTOS LEGALES PIE */
+.footer-legal {
+    text-align: center;
+    font-size: 11px;
+    color: #a1a1a6;
+    line-height: 1.3;
+    padding: 0 20px;
+}
+
+/* Nuevos botones grises al lado del rojo */
+.dot-grey {
+    position: relative;
+    width: 13px;
+    height: 13px;
+    background: #e1e1e1; /* Gris claro tipo Apple */
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    top: -3.8px;
+    margin-left: 9px;
+    left: 15px;
+}
+
+/* Ajuste opcional: si quieres que el rojo tenga un margen exacto */
+.close-btn {
+    margin-left: 0px !important; /* Reseteamos para que el grupo empiece bien */
+}
+
+.window-header {
+    gap: 0px; /* Controlamos el espacio manualmente con los márgenes */
+    padding-left: 15px;
+}
+
+/* Anchors the buttons to the right side of the search bar */
+.tahoe-button-group {
+    position: absolute;
+    left: 100%; /* Starts exactly where the search bar ends */
+    display: flex;
+    gap: 10px;
+    padding-left: 15px; /* The gap between the bar and the first circle */
+    align-items: center;
+    height: 100%; /* Keeps them vertically centered with the bar */
+}
+
+/* Ensure the button itself handles the image alignment */
+.tahoe-circle-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(200, 235, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.tahoe-circle-btn:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+}
+
+.tahoe-circle-btn img {
+    opacity: 40%;
+    width: 22px;  /* Adjust this if you want the icons larger or smaller */
+    height: 22px;
+    object-fit: contain;
+    /* Optional: If your PNGs are black and you want them to look white/grey */
+    /* filter: brightness(0) invert(1); */
+}
+
+/* Contenedor principal de la app (Igual que tus reglas de .safari) */
+.settings-app {
+    flex-grow: 1;
+    width: 900px;
+    height: 550px;
+    background-color: var(--app-color-white); /* Mantiene la taskbar blanca */
+    top: 10%;
+    left: 20%;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    position: absolute;
+}
+
+.settings_window__taskbar {
+    position: absolute;
+    width: 25%;
+    top: 12px;
+    left: -16px;
+    scale: 82%;
+    height: 6%;
+    display: flex;
+    padding: 0 16px;
+    border-radius: 22px;
+}
+
+.settings_window__taskbar--actions {
+  display: flex;
+  align-items: center;
+}
+
+.settings_window__taskbar:hover button::after {
+  color: #000;
+}
+
+.settings_window__taskbar--actions button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0.8rem;
+  height: 0.8rem;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.settings_window__taskbar--actions button:not(:last-child) {
+  margin-right: 8px;
+}
+
+.settings_window__taskbar--actions button:nth-child(1) {
+  background-color: #ff5f56;
+  box-shadow: 0 0 0 0.5px #e0443e;
+}
+
+.settings_window__taskbar--actions button::after {
+  display: block;
+  font-size: 14px;
+  color: transparent;
+  font-weight: 900;
+}
+
+.settings_window__taskbar--actions button:nth-child(1)::after {
+  content: "×";
+}
+
+.settings_window__taskbar--actions button:nth-child(1):hover {
+  background-color: #fc3c32;
+}
+
+.settings_window__taskbar--actions button:nth-child(2) {
+  background-color: #ffbd2e;
+  box-shadow: 0 0 0 0.5px #dea123;
+}
+
+.settings_window__taskbar--actions button:nth-child(2)::after {
+  content: "−";
+}
+
+.settings_window__taskbar--actions button:nth-child(2):hover {
+  background-color: #ffa600;
+}
+
+.settings_window__taskbar--actions button:nth-child(3) {
+  background-color: #27c93f;
+  box-shadow: 0 0 0 0.5px #1aab29;
+}
+
+.settings_window__taskbar--actions button:nth-child(3)::after {
+  content: "⤡";
+}
+
+.settings_window__taskbar--actions button:nth-child(3):hover {
+  background-color: #12aa29;
+}
+
+.settings_window__taskbar--content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings_window__taskbar--content h2 {
+  color: var(--color-black);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Interior de la aplicación (Lo que va debajo de la barra blanca) */
+.settings-layout {
+    display: flex !important;
+    height: 100%; /* El 6% restante es de la .window__taskbar */
+    color: white;
+    /* Redondeamos solo abajo para que coincida con el borde de 12px del padre */
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    overflow: hidden;
+}
+
+.settings-sidebar {
+    width: 180px;
+    height: 494.5px;
+    background: rgba(255, 255, 255, 0.9);
+    background: linear-gradient(
+135deg, 
+rgba(0, 191, 255, 0.15) -85%,   /* Azul macOS */
+rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
+);
+    padding: 20px 15px;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 15px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.settings-main {
+    position: relative;
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    color: black;
+}
+
+.s-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-bottom: 4px;
+    transition: background 0.2s;
+    color: black;
+}
+
+.s-item.active { 
+    background: #007aff; 
+    color: white;
+}
+
+.s-item:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.s-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.s-search {
+    position: absolute;
+    background-color: #D1D1D1;
+    left: 18px;
+    padding-left: 20px;
+    width: 170px;
+    height: 24px;
+    border-radius: 50px;
+    top: 55px;
+}
+.s-search svg {
+    left: 3px;
+    top: -1.5px;
+    scale: 60%;
+    fill: gray;
+    position: absolute;
+    padding-top: 2px;
+}
+
+.s-search input {
+    position: relative;
+    font-size: 12px;
+    top: 1.5px;
+    right: -7px !important;
+}
+
+
+.s-nav {
+    position: relative;
+    top: 95px;
+}
+
+.arrow-button-group {
+    position: relative;
+    gap: 10px;
+    top: -17px;
+    left: -17px;
+}
+
+.arrow-button-background {
+    position: relative;
+    background-color: white;
+    height: 34px;
+    width: 46px;
+    padding-left: 10px;
+    border-radius: 22px;
+    box-shadow: 0 10px 60px rgba(0, 0, 0, 0.2);
+
+}
+/* Ensure the button itself handles the image alignment */
+.arrow-circle-btn {
+    scale: 50%;
+    opacity: 50%;
+}
