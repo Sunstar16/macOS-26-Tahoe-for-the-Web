@@ -583,7 +583,7 @@ border-radius: 20px;
 z-index: 11;
 background-image: url("../background/DockBackground70.png");
 background-size: 101.45% 121%;
-background-position: -8.3px -7.5px;
+background-position: -8px -7.3px;
 opacity: 0.95;
 cursor: url("../cursor/normal-select.png"), auto !important;
 }
