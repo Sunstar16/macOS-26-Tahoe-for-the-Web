@@ -39,14 +39,31 @@ input {
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+
 body {
+  width: 100vw;
   height: 100vh;
+  position: fixed;
+  margin: 0;
   user-select: none;
   font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
   background: url("../background/iridescence.jpg") center/cover no-repeat;
   overflow: hidden;
-  /* Cambio mínimo: Ruta relativa a tu archivo PNG */
   cursor: url('../cursor/normal-select.png'), auto !important;
+}
+
+.container__Window {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
 /* Nueva clase para el efecto de cursor grande de macOS Tahoe */
@@ -75,7 +92,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 20;
+  z-index: 99999 !important;
   animation: top-to-bottom 0.3s;
 }
 
@@ -580,7 +597,7 @@ backdrop-filter: url("#glass-distortion") blur(3.2px);
 -webkit-backdrop-filter: blur(3.2px);
 border: 0.5px solid rgba(255, 255, 255, 0.001);
 border-radius: 20px;
-z-index: 11;
+z-index: 99998 !important;
 background-image: url("../background/DockBackground75.png");
 background-size: 101.45% 121%;
 background-position: -8px -7.3px;
@@ -673,16 +690,15 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .container__Window {
   width: 100%;
-  height: 90%;
+  height: 100%;
   justify-content: space-around;
   align-items: center;
   display: none;
 }
 
 .window {
+  position: absolute !important;
   display: none;
-  min-width: 50%;
-  max-width: 80%;
   height: 430px;
   overflow: hidden;
   border-radius: 1rem;
@@ -695,7 +711,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 }
 
 .window__taskbar {
-  height: 6%;
+  height: 35px;
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
@@ -791,7 +807,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 .terminal .window__taskbar,
 .Vscode .window__taskbar,
 .maps .window__taskbar {
-  height: 9%;
+  height: 35px;
 }
 
 .terminal .window__taskbar--content h2 {
@@ -802,7 +818,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .terminal_content {
   width: 100%;
-  height: 91%;
+  height: 100%;
   overflow-y: scroll;
   padding-left: 1rem;
   background-color: rgba(42, 46, 56, 0.9);
@@ -945,7 +961,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
   border-radius: 100px;
   background: rgba(200, 235, 255, 0.9);
   backdrop-filter: blur(5px);
-  z-index: 11 !important;
+  z-index: 100000 !important;
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
   opacity: 0;
   visibility: hidden;
@@ -1175,10 +1191,13 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .calculator {
   display: none;
+  position: absolute !important; /* Asegura que se pueda mover por coordenadas */
   width: 20rem;
   max-width: 100%;
   height: 25rem;
-  max-height: 80%;
+  max-height: 100%;
+  margin: 0; 
+  transform: none; 
   background: var(--color-black-500);
   backdrop-filter: blur(1rem);
   border-radius: 1rem;
@@ -1381,6 +1400,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
   border: 1px solid var(--color-white-200);
   border-radius: 16px;
   overflow: hidden;
+  z-index: 99997 !important;
 }
 .widgets-panel.open {
   transform: translateX(0);
@@ -1527,10 +1547,9 @@ border-bottom-right-radius: 24px;
 border-bottom-left-radius: 24px;
 color: white;
 }
-
-/* Safari App Window - Consistencia con macOS Tahoe */
+/* Safari App Window */
 .safari {
-  flex-grow: 1;
+  position: absolute !important;
   width: 900px;
   height: 550px;
   background-color: var(--app-color-white);
@@ -1539,17 +1558,53 @@ color: white;
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   z-index: 10;
-  display: none; /* Importante: empieza oculto como Maps */
-  flex-direction: column;
-  overflow: hidden;
+  display: none; 
+  flex-direction: column; /* Organiza barra arriba y contenido abajo */
+  overflow: hidden !important; 
 }
-/* Ajuste del iframe para que ocupe el espacio restante bajo la taskbar */
+
+/* Barra de tareas superior */
+.safari .window__taskbar {
+  height: 35px;
+  flex-shrink: 0; /* Evita que la barra se aplaste */
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+  background-color: var(--app-color-white);
+}
+
+/* Contenedor del contenido: Aquí ocurre la magia */
+.safari .content {
+  flex-grow: 1; /* Ocupa todo el alto restante de la ventana */
+  width: 100%;
+  height: 95%;
+  position: relative;
+  overflow: hidden; /* Corta lo que sobresalga del escalado */
+}
+
+/* El Iframe forzado a verse completo */
 .safari iframe {
-  position: absolute;
-  flex-grow: 1; /* Esto hace que el iframe rellene todo el espacio disponible */
+  /* Forzamos un tamaño de pantalla "Escritorio" interno */
+  width: 100%;
+  height: 100%;
+  
+  /* Eliminamos bordes */
+  border: none;
+  display: block;
+
+  /* Redondeado de esquinas inferiores */
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  display: block;
+
+  /* TRUCO PARA VER TODO: 
+     Si notas que las webs se siguen viendo cortadas, 
+     puedes usar 'zoom' o 'transform: scale', pero lo ideal
+     para un clon de macOS es que el iframe sea responsive. 
+  */
+}
+
+/* Capa de seguridad para el redimensionado */
+.resizing iframe {
+  pointer-events: none !important;
 }
 
 .music {
@@ -2039,4 +2094,136 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
 .arrow-circle-btn {
     scale: 50%;
     opacity: 50%;
+}
+
+/* Manejadores para redimensionar */
+.resizer {
+    position: absolute;
+    z-index: 10;
+}
+
+/* Bordes */
+.resizer.r { cursor: e-resize; width: 10px; right: -5px; top: 0; height: 100%; }
+.resizer.b { cursor: s-resize; height: 10px; bottom: -5px; left: 0; width: 100%; }
+.resizer.l { cursor: w-resize; width: 10px; left: -5px; top: 0; height: 100%; }
+.resizer.t { cursor: n-resize; height: 10px; top: -5px; left: 0; width: 100%; }
+
+/* Esquinas */
+.resizer.rb { cursor: se-resize; width: 15px; height: 15px; right: -5px; bottom: -5px; }
+.resizer.lb { cursor: sw-resize; width: 15px; height: 15px; left: -5px; bottom: -5px; }
+
+/* Evitar que los iframes bloqueen los eventos del ratón al redimensionar */
+.resizing iframe {
+    pointer-events: none;
+}
+
+.resizer {
+    position: absolute;
+    z-index: 9999; /* Asegúrate de que esté por encima de TODO en la ventana */
+    /* background: rgba(255,0,0,0.2); */ /* Descomenta esta línea para debuguear y ver los bordes */
+}
+
+/* Bordes más fáciles de agarrar */
+.resizer.t, .resizer.b { height: 10px; }
+.resizer.l, .resizer.r { width: 10px; }
+
+/* Esquinas más grandes para que no fallen */
+.resizer.tl, .resizer.tr, .resizer.lb, .resizer.rb {
+    width: 16px;
+    height: 16px;
+}
+
+.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, #about-window {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important; /* Curva tipo Apple */
+}
+
+/* ESTO ES LO NUEVO: Mientras el JS dice que estamos arrastrando, 
+   quitamos la animación para que la ventana siga al ratón al instante */
+.is-dragging {
+    transition: none !important;
+}
+
+.window--maximized {
+    transition: all 0.2s ease-in-out;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+}
+
+/* Esta es la clave: cuando la ventana se está moviendo o redimensionando, 
+   anulamos la transición para que no tenga lag */
+.resizing, .ui-draggable-dragging, .dragging {
+    transition: none !important;
+}
+
+/* --- POSICIONAMIENTO DE ESQUINAS SUPERIORES --- */
+
+/* Esquina Superior Izquierda (Top-Left) */
+.resizer.tl {
+    top: -3px;
+    left: -5px;
+    width: 16px;
+    height: 16px;
+    cursor: nw-resize; /* Cursor diagonal \ */
+    z-index: 100;
+}
+
+/* Esquina Superior Derecha (Top-Right) */
+.resizer.tr {
+    top: -3px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    cursor: ne-resize; /* Cursor diagonal / */
+    z-index: 100;
+}
+
+/* Aseguramos que los bordes laterales y el superior también tengan buena área de agarre */
+.resizer.t { 
+    top: -5px; 
+    left: 10px; 
+    right: 10px; 
+    height: 10px; 
+    cursor: n-resize; 
+}
+
+/* Ajuste de prioridad: los botones de la taskbar deben estar POR ENCIMA 
+   del resizer para que no dejes de poder cerrar la ventana */
+.window__taskbar--actions, .close-cal, .max-cal, .min-cal {
+    position: relative;
+    z-index: 101; 
+}
+
+/* El recuadro de previsualización (Aesthetic macOS) */
+/* Modificamos el snap-preview para que soporte el ancho completo */
+#snap-preview {
+    position: fixed;
+    top: 30px;
+    height: calc(100vh - 30px - 85px);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    z-index: 10;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, left 0.3s ease, width 0.3s ease; /* Añadimos width a la transición */
+    pointer-events: none;
+}
+
+/* Clases para el encajado real */
+.window--snap-left {
+    left: 0 !important;
+    top: 30px !important;
+    width: 50vw !important;
+    height: calc(100vh - 30px - 85px) !important;
+    border-radius: 12px !important;
+}
+
+.window--snap-right {
+    left: 50vw !important;
+    top: 30px !important;
+    width: 50vw !important;
+    height: calc(100vh - 30px - 85px) !important;
+    border-radius: 12px !important;
 }
