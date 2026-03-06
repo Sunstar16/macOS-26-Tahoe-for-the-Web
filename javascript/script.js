@@ -68,20 +68,6 @@ const terminalApp = {
   opening: document.querySelector(".open-terminal"),
 };
 
-// VScode App
-
-/*  Can't connect to the github.dev or vscode.dev 
-const vscodeApp = {
-  app_name: document.querySelector("#VScode"),
-  window: document.querySelector(".Vscode"),
-  close: document.querySelector(".close-Vscode"),
-  backfull: document.querySelector(".backfull-Vscode"),
-  full: document.querySelector(".full-Vscode"),
-  point: document.querySelector("#point-vscode"),
-  opening: document.querySelector(".open-vscode")
-};
-*/
-
 // Maps App
 const mapsApp = {
   app_name: document.querySelector("#map"),
@@ -93,7 +79,7 @@ const mapsApp = {
   opening: document.querySelector(".open-map"),
 };
 
-// Safari App - Definición exacta igual que Maps
+// Safari App
 const safariApp = {
   app_name: document.querySelector("#Safari-nav"),
   window: document.querySelector(".safari"),
@@ -104,10 +90,9 @@ const safariApp = {
   opening: document.querySelector(".open-safari"),
 };
 
-//Settings App
-// Settings App - Definición exacta siguiendo tu esquema
+// Settings App
 const settingsApp = {
-  app_name: document.querySelector("#Settings-nav"), // ID en la barra superior (si existe)
+  app_name: document.querySelector("#Settings-nav"),
   window: document.querySelector(".settings-app"),
   full: document.querySelector(".settings-app .full-map"),
   close: document.querySelector(".settings-app .close-map"),
@@ -140,8 +125,7 @@ const launchpad = {
 
 /********** LISTENERS **********/
 
-
-// Overlay para atenuar el brillo (solo se añade tras DOMContentLoaded)
+// Overlay para atenuar el brillo
 let brightnessOverlay;
 function createBrightnessOverlay() {
   if (document.getElementById('brightness-overlay')) return;
@@ -170,27 +154,254 @@ function updateBrightnessOverlay() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Crear overlay solo cuando el DOM está listo
   createBrightnessOverlay();
   if (elements.brightness_range) {
     elements.brightness_range.addEventListener('input', updateBrightnessOverlay);
     updateBrightnessOverlay();
   }
-  // Asegurar que spotlight esté oculto al cargar
   if (elements.spotlight_search) {
     elements.spotlight_search.style.display = 'none';
   }
-  // Asegurar que la hora y fecha se muestren correctamente
   if (typeof digi === 'function') {
     digi();
   }
 });
 
-/**************************************************************
- * macOS Tahoe - Logic + Shake to Find (Fixed for Dragging)
- **************************************************************/
+// Función para centrar cualquier ventana manualmente
+function centerWindow(win) {
+    // Calculamos el centro restando la mitad del ancho/alto de la ventana 
+    // a la mitad del ancho/alto de la pantalla
+    const x = (window.innerWidth / 2) - (win.offsetWidth / 2);
+    const y = (window.innerHeight / 2) - (win.offsetHeight / 2);
 
-let isDragging = false; // Variable global para controlar el estado
+    win.style.left = x + "px";
+    win.style.top = y + "px";
+}
+
+// --- LÓGICA DE MAXIMIZADO UNIFICADA ---
+document.addEventListener('DOMContentLoaded', () => {
+    const maximizeButtons = document.querySelectorAll('.full, .full-note, .full-map, .max-cal');
+
+    maximizeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            const win = btn.closest('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, #about-window');
+            if (!win) return;
+
+            // EXCLUIR APPLE MUSIC
+            if (win.classList.contains('music')) {
+                console.log("Maximizado deshabilitado para Apple Music");
+                return; 
+            }
+
+            const isMaximized = win.classList.contains('window--maximized');
+
+            if (isMaximized) {
+                // RESTAURAR
+                win.classList.remove('window--maximized');
+                win.style.top = win.dataset.preTop;
+                win.style.left = win.dataset.preLeft;
+                win.style.width = win.dataset.preWidth;
+                win.style.height = win.dataset.preHeight;
+                win.style.transform = win.dataset.preTransform || "none";
+            } else {
+    // MAXIMIZAR
+    const rect = win.getBoundingClientRect();
+
+    // CAMBIO CLAVE: Solo guardamos la posición original si la ventana 
+    // NO está ya en un modo especial (ni snapped a la izquierda ni a la derecha).
+    // Esto evita que el tamaño de "50vw" se guarde como el tamaño original.
+    if (!win.classList.contains('window--snap-left') && !win.classList.contains('window--snap-right')) {
+        win.dataset.preTop = win.style.top || rect.top + "px";
+        win.dataset.preLeft = win.style.left || rect.left + "px";
+        win.dataset.preWidth = rect.width + "px"; // Usamos rect.width para asegurar PÍXELES reales
+        win.dataset.preHeight = rect.height + "px";
+        win.dataset.preTransform = win.style.transform || "none";
+    }
+
+    const navbarHeight = 30; 
+    const dockMargin = 85;   
+    const availableWidth = window.innerWidth;
+    const availableHeight = window.innerHeight - navbarHeight - dockMargin;
+
+    // Quitamos las clases de snap por si acaso estaba en una de ellas
+    win.classList.remove('window--snap-left', 'window--snap-right');
+    
+    win.classList.add('window--maximized');
+    win.style.top = navbarHeight + "px";
+    win.style.left = "0px";
+    win.style.width = availableWidth + "px";
+    win.style.height = availableHeight + "px";
+    win.style.transform = "none"; 
+}
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const excludeList = ['.music']; 
+    let isResizing = false; 
+
+    function makeResizable(win) {
+        if (excludeList.some(sel => win.matches(sel))) return;
+
+        const resizers = ['r', 'b', 'rb', 'l', 'lb', 't', 'tl', 'tr'];
+        resizers.forEach(type => {
+            const resizer = document.createElement('div');
+            resizer.className = `resizer ${type}`;
+            resizer.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); 
+                isResizing = true; 
+                win.classList.remove('window--maximized');
+                initResize(e, type, win);
+            });
+            win.appendChild(resizer);
+        });
+
+        function initResize(e, type, win) {
+            const rect = win.getBoundingClientRect();
+            const startWidth = rect.width;
+            const startHeight = rect.height;
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const startLeft = rect.left;
+            const startTop = rect.top;
+
+            win.classList.add('resizing');
+
+            function doResize(e) {
+                if (!isResizing) return;
+                if (type.includes('r')) win.style.width = (startWidth + e.clientX - startX) + 'px';
+                if (type.includes('b')) win.style.height = (startHeight + e.clientY - startY) + 'px';
+                if (type.includes('t')) {
+                    const newHeight = startHeight - (e.clientY - startY);
+                    if (newHeight > 100) {
+                        win.style.height = newHeight + 'px';
+                        win.style.top = (startTop + (e.clientY - startY)) + 'px';
+                    }
+                }
+                if (type.includes('l')) {
+                    const newWidth = startWidth - (e.clientX - startX);
+                    if (newWidth > 200) {
+                        win.style.width = newWidth + 'px';
+                        win.style.left = (startLeft + (e.clientX - startX)) + 'px';
+                    }
+                }
+            }
+
+            function stopResize() {
+                isResizing = false; 
+                win.classList.remove('resizing');
+                window.removeEventListener('mousemove', doResize);
+                window.removeEventListener('mouseup', stopResize);
+            }
+            window.addEventListener('mousemove', doResize);
+            window.addEventListener('mouseup', stopResize);
+        }
+    }
+
+    const allWins = document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, #about-window');
+    allWins.forEach(makeResizable);
+});
+
+/**************************************************************
+ * GESTIÓN DE CAPAS (TRAER AL FRENTE AL HACER CLIC)
+ **************************************************************/
+let highestZ = 100; // Empezamos en 100 para estar por encima del fondo
+
+function focusWindow(win) {
+    highestZ++;
+    win.style.zIndex = highestZ;
+}
+
+// Aplicamos el evento a todas las ventanas
+document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, #about-window').forEach(win => {
+    win.addEventListener('mousedown', () => {
+        focusWindow(win);
+    });
+});
+
+// También lo añadimos a tus funciones de abrir ventana para que aparezcan delante al abrirse
+const originalOpenWindow = open_window;
+open_window = function(open, point, appName) {
+    originalOpenWindow(open, point, appName);
+    focusWindow(open);
+};
+
+/**************************************************************
+ * WINDOW SNAPPING (LADO IZQUIERDO Y DERECHO)
+ **************************************************************/
+let snapPreview = document.createElement('div');
+snapPreview.id = 'snap-preview';
+document.body.appendChild(snapPreview);
+
+let snapTimeout;
+let currentSnapSide = null;
+
+function handleSnapping(mouseX, win) {
+    const edgeMargin = 10; // Sensibilidad del borde en píxeles
+    const winElement = $(win)[0]; // Convertir a elemento JS si es jQuery
+
+    // Detectar si el cursor toca el borde izquierdo o derecho
+    if (mouseX <= edgeMargin) {
+        showSnapPreview('left');
+        startSnapTimer('left', winElement);
+    } else if (mouseX >= window.innerWidth - edgeMargin) {
+        showSnapPreview('right');
+        startSnapTimer('right', winElement);
+    } else {
+        hideSnapPreview();
+        clearTimeout(snapTimeout);
+        snapTimeout = null;
+        currentSnapSide = null;
+    }
+}
+
+function showSnapPreview(side) {
+    if (currentSnapSide === side) return;
+    currentSnapSide = side;
+    snapPreview.style.display = 'block';
+    snapPreview.style.left = side === 'left' ? '0' : '50%';
+    snapPreview.style.opacity = '1';
+}
+
+function hideSnapPreview() {
+    snapPreview.style.opacity = '0';
+    setTimeout(() => { if (snapPreview.style.opacity === '0') snapPreview.style.display = 'none'; }, 300);
+}
+
+function startSnapTimer(side, win) {
+    if (snapTimeout) return; // Ya hay un contador en marcha
+
+    snapTimeout = setTimeout(() => {
+        applySnap(win, side);
+        hideSnapPreview();
+    }, 1000); // 1 Segundo de espera
+}
+
+function applySnap(win, side) {
+    // Guardamos el tamaño original antes de encajar (si no estaba ya maximizada/encajada)
+    if (!win.classList.contains('window--maximized') && !win.classList.contains('window--snap-left') && !win.classList.contains('window--snap-right')) {
+        win.dataset.preWidth = win.style.width;
+        win.dataset.preHeight = win.style.height;
+        win.dataset.preTop = win.style.top;
+        win.dataset.preLeft = win.style.left;
+    }
+
+    win.classList.remove('window--snap-left', 'window--snap-right', 'window--maximized');
+    win.classList.add(side === 'left' ? 'window--snap-left' : 'window--snap-right');
+    
+    // Forzamos que ignore límites previos
+    win.style.maxWidth = "none";
+    win.style.minWidth = "none";
+}
+
+/**************************************************************
+ * macOS Tahoe - Logic + Shake to Find
+ **************************************************************/
+let isDragging = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const aboutBtn = document.getElementById('about-link');
@@ -198,8 +409,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const draggable = document.getElementById('draggable-window');
 
     if (aboutBtn && aboutWin && draggable) {
-        
-        // Abrir ventana
         aboutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             aboutWin.style.display = 'block';
@@ -209,16 +418,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         let offsetX, offsetY;
-
-        // Lógica de arrastre
         draggable.addEventListener('mousedown', (e) => {
             if (e.target.closest('button')) return;
-
-            isDragging = true; // <--- BLOQUEAMOS EL CURSOR GRANDE AQUÍ
+            isDragging = true;
             const rect = draggable.getBoundingClientRect();
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
-            
             draggable.style.transform = 'none';
             draggable.style.left = rect.left + 'px';
             draggable.style.top = rect.top + 'px';
@@ -232,13 +437,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('mouseup', () => {
-            isDragging = false; // <--- LIBERAMOS EL CURSOR AL SOLTAR
+            isDragging = false;
             draggable.style.cursor = 'grab';
         });
     }
 });
 
-/********** Shake to Find Cursor (Corregido) **********/
 let lastMouseX = 0;
 let lastMouseY = 0;
 let lastMouseTime = Date.now();
@@ -247,34 +451,24 @@ let firstMove = true;
 
 document.addEventListener('mousemove', (e) => {
   const currentTime = Date.now();
-
   if (firstMove) {
-    lastMouseX = e.pageX;
-    lastMouseY = e.pageY;
-    lastMouseTime = currentTime;
-    firstMove = false;
+    lastMouseX = e.pageX; lastMouseY = e.pageY;
+    lastMouseTime = currentTime; firstMove = false;
     return;
   }
-
   const timeDiff = currentTime - lastMouseTime;
-
   if (timeDiff > 0) {
     const distance = Math.sqrt(Math.pow(e.pageX - lastMouseX, 2) + Math.pow(e.pageY - lastMouseY, 2));
     const speed = (distance / timeDiff) * 100; 
-
-    // MODIFICACIÓN: Solo se hace grande si NO estamos arrastrando la ventana
     if (speed > 1500 && !isDragging) { 
       document.body.classList.add('cursor-big');
     }
-
     clearTimeout(cursorTimeout);
     cursorTimeout = setTimeout(() => {
       document.body.classList.remove('cursor-big');
     }, 500);
   }
-
-  lastMouseX = e.pageX;
-  lastMouseY = e.pageY;
+  lastMouseX = e.pageX; lastMouseY = e.pageY;
   lastMouseTime = currentTime;
 });
 
@@ -283,84 +477,6 @@ function closeAbout() {
     if (win) win.style.display = 'none';
 }
 
-/**************************************************************
- * macOS Tahoe - About This Mac Logic (Full Window Drag)
- **************************************************************/
-
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Elementos
-    const aboutBtn = document.getElementById('about-link');
-    const aboutWin = document.getElementById('about-window');
-    const draggable = document.getElementById('draggable-window');
-
-    // 2. Apertura de la ventana
-    if (aboutBtn && aboutWin && draggable) {
-        aboutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            aboutWin.style.display = 'block';
-            
-            // Centrado inicial
-            draggable.style.top = "50%";
-            draggable.style.left = "50%";
-            draggable.style.transform = "translate(-50%, -50%)";
-        });
-
-        // 3. Lógica de Arrastre (Toda la caja)
-        let isDragging = false;
-        let offsetX, offsetY;
-
-        // Ahora escuchamos en 'draggable' (toda la caja) en lugar de 'header'
-        draggable.addEventListener('mousedown', (e) => {
-            // SEGURIDAD: Si haces clic en el botón de cerrar o en el de info, no arrastres
-            if (e.target.closest('button')) return;
-
-            isDragging = true;
-            
-            const rect = draggable.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            
-            draggable.style.transform = 'none';
-            draggable.style.left = rect.left + 'px';
-            draggable.style.top = rect.top + 'px';
-            
-            draggable.style.cursor = 'grabbing';
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-
-            let x = e.clientX - offsetX;
-            let y = e.clientY - offsetY;
-
-            draggable.style.left = x + 'px';
-            draggable.style.top = y + 'px';
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            draggable.style.cursor = 'default';
-        });
-    }
-});
-
-// 4. Función de cierre (global)
-function closeAbout() {
-    const win = document.getElementById('about-window');
-    if (win) win.style.display = 'none';
-}
-/**
- * 4. Función de cierre global
- * Se llama desde el atributo onclick="closeAbout()" del HTML
- */
-function closeAbout() {
-    const win = document.getElementById('about-window');
-    if (win) {
-        win.style.display = 'none';
-    }
-}
 // Spotlight
 function handleopen_spotlight() {
   if (elements.spotlight_search.style.display === "none") {
@@ -370,35 +486,25 @@ function handleopen_spotlight() {
   }
 }
 
-// Notes app function start
+// Notes app logic
 function handleAdding() {
   const create_input = document.createElement("input");
   create_input.placeholder = "Writing name";
   notesApp.notes.appendChild(create_input);
 }
-
 function handleDeleting() {
   const inputChild = document.querySelector(".content__sidebar--notes input");
-  inputChild.remove();
+  if(inputChild) inputChild.remove();
   notesApp.content_typing.style.display = "none";
 }
-
 function handleNotes() {
   notesApp.content_typing.style.display = "block";
 }
-
-// Notes app function end
 
 function handleMinimize(Minimize) {
   Minimize.style.maxWidth = "80%";
   Minimize.style.minWidth = "70%";
   Minimize.style.height = "430px";
-}
-
-function handleFullScreen(maximize) {
-  maximize.style.maxWidth = "95%";
-  maximize.style.minWidth = "95%";
-  maximize.style.height = "90%";
 }
 
 function close_window(close, point, appName) {
@@ -417,582 +523,364 @@ function open_window(open, point, appName) {
   point.style.display = "block";
 }
 
-// Safari Event Listeners
-safariApp.opening.addEventListener("click", () => {
-  open_window(safariApp.window, safariApp.point, safariApp.app_name);
-});
+// Event Listeners Apps
+safariApp.opening.addEventListener("click", () => open_window(safariApp.window, safariApp.point, safariApp.app_name));
+safariApp.close.addEventListener("click", () => close_window(safariApp.window, safariApp.point, safariApp.app_name));
 
-safariApp.close.addEventListener("click", () => {
-  close_window(safariApp.window, safariApp.point, safariApp.app_name);
-});
+settingsApp.opening.addEventListener("click", () => open_window(settingsApp.window, settingsApp.point, settingsApp.app_name));
+settingsApp.close.addEventListener("click", () => close_window(settingsApp.window, settingsApp.point, settingsApp.app_name));
 
-safariApp.full.addEventListener("click", () => {
-  handleFullScreen(safariApp.window);
-});
+musicApp.opening.addEventListener("click", () => open_window(musicApp.window, musicApp.point, musicApp.app_name));
+musicApp.close.addEventListener("click", () => close_window(musicApp.window, musicApp.point, musicApp.app_name));
 
-safariApp.backfull.addEventListener("click", () => {
-  handleMinimize(safariApp.window);
-});
-
-
-// Settings Event Listeners
-settingsApp.opening.addEventListener("click", () => {
-  open_window(settingsApp.window, settingsApp.point, settingsApp.app_name);
-});
-
-settingsApp.close.addEventListener("click", () => {
-  close_window(settingsApp.window, settingsApp.point, settingsApp.app_name);
-});
-
-// Al hacer clic en el botón verde (full), no ejecutamos ninguna función
-settingsApp.full.addEventListener("click", () => {
-  // No hace nada, botón deshabilitado
-  console.log("Maximizar deshabilitado en System Settings"); 
-});
-
-// Botón Amarillo (Minimizar) - Deshabilitado
-settingsApp.backfull.addEventListener("click", () => {
-  console.log("Minimizar deshabilitado en Music");
-  // Al no llamar a handleMinimize(settingsApp.window), no hará nada
-});
-
-
-// Music Event Listeners
-musicApp.opening.addEventListener("click", () => {
-  open_window(musicApp.window, musicApp.point, musicApp.app_name);
-});
-
-musicApp.close.addEventListener("click", () => {
-  close_window(musicApp.window, musicApp.point, musicApp.app_name);
-});
-
-// Al hacer clic en el botón verde (full), no ejecutamos ninguna función
-musicApp.full.addEventListener("click", () => {
-  // No hace nada, botón deshabilitado
-  console.log("Maximizar deshabilitado en Music"); 
-});
-
-// Botón Amarillo (Minimizar) - Deshabilitado
-musicApp.backfull.addEventListener("click", () => {
-  console.log("Minimizar deshabilitado en Music");
-  // Al no llamar a handleMinimize(musicApp.window), no hará nada
-});
-
-// Launchpad function start
+// Launchpad logic
 launchpad.opening.addEventListener("click", handleOpenLaunching);
-
 function handleOpenLaunching() {
   if (launchpad.window.style.display === "none") {
-    // APERTURA (Se queda como está)
     launchpad.window.style.display = "block";
     elements.navbar.style.display = "none";
     launchpad.point.style.display = "block";
   } else {
-    // CIERRE (Aquí aplicamos el reverse)
-    
-    // 1. Añadimos la clase de animación de salida
     launchpad.window.classList.add("launchpad-closing");
-
-    // 2. Esperamos 300ms (duración de la animación) antes de ocultar
     setTimeout(() => {
       launchpad.window.style.display = "none";
       elements.navbar.style.display = "flex";
       launchpad.point.style.display = "none";
-      
-      // 3. Quitamos la clase para que esté limpia cuando vuelvas a abrir
       launchpad.window.classList.remove("launchpad-closing");
     }, 300);
   }
-  launchpad.container.style.display = "none";
 }
 
-// Detectar clic en el fondo del Launchpad para cerrar
 launchpad.window.addEventListener("click", (e) => {
-  // Si el clic es en el fondo o en el contenedor de apps (pero no en un icono)
   if (e.target === launchpad.window || e.target === launchpad.app_container) {
-    // Si está abierto (display no es none), lo cerramos
-    if (launchpad.window.style.display !== "none") {
-      handleOpenLaunching(); 
-    }
+    if (launchpad.window.style.display !== "none") handleOpenLaunching(); 
   }
 });
-
-// Evitar que se cierre al clicar en la barra de búsqueda
-launchpad.searchbox.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
-
+launchpad.searchbox.addEventListener("click", (e) => e.stopPropagation());
 
 function handleLaunchpadSearch(e) {
   for (let app of launchpad.app_container.children) {
     if (e.target.value) {
       app.style.display = "none";
-      if (app.dataset.keywords.includes(e.target.value)) {
-        app.style.display = "flex";
-      }
+      if (app.dataset.keywords.toLowerCase().includes(e.target.value.toLowerCase())) app.style.display = "flex";
     } else app.style.display = "flex";
   }
 }
-// Launchpad function end
 
-// Calculator app start
 function handleOpenCal_lunchpad() {
-  // 1. Ejecutamos la animación de cierre (la que pusimos antes)
   handleOpenLaunching(); 
-
-  // 2. Esperamos los 300ms de la animación antes de que aparezca la calculadora
   setTimeout(() => {
     calculatorApp.window.style.display = "block";
     calculatorApp.app_name.style.display = "block";
-    
-    // El resto de tus estilos originales
     launchpad.container.style.display = "flex";
     elements.navbar.style.display = "flex";
     calculatorApp.point.style.display = "block";
-    
-    // Nota: handleOpenLaunching ya se encarga de ocultar el launchpad.window
-    // y de quitar el punto del launchpad, así que no hace falta repetirlo aquí.
+    centerWindow(calculatorApp.window); // <--- AÑADIR ESTO
   }, 300);
 }
-// Calculator app end
 
-handleopen_spotlight();
-handleOpenLaunching();
+// Generic App listeners
 notesApp.adding.addEventListener("click", handleAdding);
-calculatorApp.backfull.addEventListener("click", () =>
-  handleMinimize(terminalApp.window)
-);
-notesApp.backfull.addEventListener("click", () =>
-  handleMinimize(notesApp.window)
-);
-terminalApp.close.addEventListener("click", () =>
-  close_window(terminalApp.window, terminalApp.point, terminalApp.app_name)
-);
-notesApp.close.addEventListener("click", () =>
-  close_window(notesApp.window, notesApp.point, notesApp.app_name)
-);
-mapsApp.close.addEventListener("click", () =>
-  close_window(mapsApp.window, mapsApp.point, mapsApp.app_name)
-);
+terminalApp.close.addEventListener("click", () => close_window(terminalApp.window, terminalApp.point, terminalApp.app_name));
+notesApp.close.addEventListener("click", () => close_window(notesApp.window, notesApp.point, notesApp.app_name));
+mapsApp.close.addEventListener("click", () => close_window(mapsApp.window, mapsApp.point, mapsApp.app_name));
 notesApp.deleting.addEventListener("click", handleDeleting);
-terminalApp.full.addEventListener("click", () =>
-  handleFullScreen(terminalApp.window)
-);
-notesApp.full.addEventListener("click", () =>
-  handleFullScreen(notesApp.window)
-);
-/*
-vscodeApp.full.addEventListener("click", () =>
-  handleFullScreen(vscodeApp.window)
-);
-*/
-mapsApp.full.addEventListener("click", () => handleFullScreen(mapsApp.window));
 notesApp.window.addEventListener("click", handleNotes);
-terminalApp.opening.addEventListener("click", () =>
-  open_window(terminalApp.window, terminalApp.point, terminalApp.app_name)
-);
-notesApp.opening.addEventListener("click", () =>
-  open_window(notesApp.window, notesApp.point, notesApp.app_name)
-);
-calculatorApp.opening.addEventListener("click", () =>
-  open_window(calculatorApp.window, calculatorApp.point, calculatorApp.app_name)
-);
-/*
-vscodeApp.opening.addEventListener("click", () =>
-  open_window(vscodeApp.window, vscodeApp.point, vscodeApp.app_name)
-);
-*/
-mapsApp.opening.addEventListener("click", () =>
-  open_window(mapsApp.window, mapsApp.point, mapsApp.app_name)
-);
-/*
-vscodeApp.close.addEventListener("click", () =>
-  close_window(vscodeApp.window, vscodeApp.point, vscodeApp.app_name)
-);
-vscodeApp.backfull.addEventListener("click", () =>
-  handleMinimize(vscodeApp.window)
-);
-*/
-mapsApp.backfull.addEventListener("click", () =>
-  handleMinimize(mapsApp.window)
-);
-calculatorApp.close.addEventListener("click", () =>
-  close_window(
-    calculatorApp.window,
-    calculatorApp.point,
-    calculatorApp.app_name
-  )
-);
+terminalApp.opening.addEventListener("click", () => open_window(terminalApp.window, terminalApp.point, terminalApp.app_name));
+notesApp.opening.addEventListener("click", () => open_window(notesApp.window, notesApp.point, notesApp.app_name));
+calculatorApp.opening.addEventListener("click", () => {
+  open_window(calculatorApp.window, calculatorApp.point, calculatorApp.app_name);
+  centerWindow(calculatorApp.window); // <--- AÑADIR ESTO
+});
+mapsApp.opening.addEventListener("click", () => open_window(mapsApp.window, mapsApp.point, mapsApp.app_name));
+calculatorApp.close.addEventListener("click", () => close_window(calculatorApp.window, calculatorApp.point, calculatorApp.app_name));
 calculatorApp.opening_l.addEventListener("click", handleOpenCal_lunchpad);
 elements.open_spotlight.addEventListener("click", handleopen_spotlight);
 launchpad.searchbox.addEventListener("input", handleLaunchpadSearch);
-elements.clockWrapper.addEventListener("click", () => {
-  elements.widgetsPanel.classList.toggle("open");
-});
+elements.clockWrapper.addEventListener("click", () => elements.widgetsPanel.classList.toggle("open"));
 
-// Calculator code
-// select all the buttons
+// Calculator Logic
 const calculatorButtons = document.querySelectorAll(".input button");
-// select the <input type="text" class="display" disabled> element
 const calculatorDisplay = document.querySelector(".display");
-
-// add eventListener to each button
 calculatorButtons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    calculate(event.target.value, calculatorDisplay);
-    console.log("btn");
-  });
+  button.addEventListener("click", (event) => calculate(event.target.value, calculatorDisplay));
 });
-
-function lastNumber(value) {
-  return value.split(/[\+\-\*\/\%]/).pop();
-}
-
+function lastNumber(value) { return value.split(/[\+\-\*\/\%]/).pop(); }
 const operators = ["+", "-", "*", "/", "%"];
-
 function calculate(value, display) {
   const latestChar = display.value[display.value.length - 1];
-
   const isEmpty = display.value === "0";
   const isDecimalLastOperand = lastNumber(display.value).includes(".");
-  const isNumber = /^[0-9]$/.test(value);
-
-  if (isEmpty && isNumber) {
-    return (display.value = value);
-  }
-
+  if (isEmpty && /^[0-9]$/.test(value)) return (display.value = value);
   switch (value) {
-    case "=":
-      if (!isEmpty) display.value = eval(display.value);
-      return;
-    case ".":
-      if (!isDecimalLastOperand) display.value += ".";
-      return;
-    case "C":
-      return (display.value = "0");
-    case "+/-":
-      if (
-        !operators.some((operator) =>
-          display.value.replace(/^-/, "").includes(operator)
-        )
-      )
-        display.value = -1 * parseFloat(display.value);
-      return;
-    case "*":
-    case "/":
-    case "-":
-    case "+":
-    case "%":
-      if (operators.includes(latestChar)) {
-        return (display.value = display.value.slice(0, -1) + value);
-      }
-    // Fall through to default case
-    default:
-      display.value += value;
+    case "=": if (!isEmpty) display.value = eval(display.value); return;
+    case ".": if (!isDecimalLastOperand) display.value += "."; return;
+    case "C": return (display.value = "0");
+    case "+/-": if (!operators.some((op) => display.value.replace(/^-/, "").includes(op))) display.value = -1 * parseFloat(display.value); return;
+    case "*": case "/": case "-": case "+": case "%":
+      if (operators.includes(latestChar)) return (display.value = display.value.slice(0, -1) + value);
+    default: display.value += value;
   }
 }
 
-
-// Dock drag-and-drop reordering (HTML5 for dock only)
+// Dock and Window Dragging
 document.addEventListener('DOMContentLoaded', function () {
-  // Enable drag for dock icons only
   const dock = document.querySelector('.dock');
   if (dock) {
     let dragged = null;
-    let dragOverIcon = null;
     dock.querySelectorAll('.icon').forEach(icon => {
-      // Identify static icons by their dock label (Downloads and Trash)
       const labelEl = icon.querySelector('.dock-label');
       const name = labelEl ? labelEl.textContent.trim().toLowerCase() : '';
-      const isStatic = (name === 'downloads' || name === 'trash');
-      if (isStatic) {
-        // Make static: not draggable and visually indicate default cursor
+      if (name === 'downloads' || name === 'trash') {
         icon.setAttribute('draggable', 'false');
-        icon.dataset.static = 'true';
         icon.classList.add('static');
-        // Do not add drag/drop listeners for static items
         return;
       }
-
       icon.setAttribute('draggable', 'true');
-      icon.addEventListener('dragstart', function (e) {
-        dragged = icon;
-        setTimeout(() => icon.classList.add('dragging'), 0);
-      });
-      icon.addEventListener('dragend', function (e) {
-        icon.classList.remove('dragging');
-        dragged = null;
-      });
-      icon.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragOverIcon = icon;
-      });
-      icon.addEventListener('drop', function (e) {
+      icon.addEventListener('dragstart', (e) => { dragged = icon; setTimeout(() => icon.classList.add('dragging'), 0); });
+      icon.addEventListener('dragend', () => { icon.classList.remove('dragging'); dragged = null; });
+      icon.addEventListener('dragover', (e) => e.preventDefault());
+      icon.addEventListener('drop', (e) => {
         e.preventDefault();
         if (dragged && dragged !== icon) {
           const icons = Array.from(dock.querySelectorAll('.icon'));
           const dropIndex = icons.indexOf(icon);
           dock.insertBefore(dragged, dropIndex > icons.indexOf(dragged) ? icon.nextSibling : icon);
         }
-        dragOverIcon = null;
       });
     });
   }
 
-  // Restore draggable for app windows (jQuery UI)
-  if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
-    $(".terminal").draggable({ handle: ".window__taskbar" });
-    $(".note").draggable({ handle: ".window__taskbar" });
-    $(".calculator").draggable({ handle: ".calculator__top" });
-    $(".Vscode").draggable({ handle: ".window__taskbar" });
-    $(".maps").draggable({ handle: ".window__taskbar" });
-    $(".safari").draggable({ handle: ".window__taskbar" });
-    $(".music").draggable({ handle: ".window__taskbar" });
-    $(".settings-app").draggable({ handle: ".settings_window__taskbar" });
-  }
+
+let snapTimeout;
+let snapPreview = document.createElement('div');
+snapPreview.id = 'snap-preview';
+document.body.appendChild(snapPreview);
+
+function handleSnapping(mouseX, win) {
+    const margin = 10; // Sensibilidad del borde
+    if (mouseX < margin) {
+        showPreview('left');
+        if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(win, 'left'), 1000);
+    } else if (mouseX > window.innerWidth - margin) {
+        showPreview('right');
+        if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(win, 'right'), 1000);
+    } else {
+        hidePreview();
+    }
+}
+
+function showPreview(side) {
+    snapPreview.style.display = 'block';
+    snapPreview.style.left = side === 'left' ? '0' : '50%';
+    setTimeout(() => snapPreview.style.opacity = '1', 10);
+}
+
+function hidePreview() {
+    snapPreview.style.opacity = '0';
+    clearTimeout(snapTimeout);
+    snapTimeout = null;
+}
+
+function applySnap(win, side) {
+    $(win).addClass(side === 'left' ? 'window--snap-left' : 'window--snap-right')
+          .removeClass('window--maximized');
+    hidePreview();
+}
+
+
+if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
+    let snapTimeout;
+    const snapPreview = document.createElement('div');
+    snapPreview.id = 'snap-preview';
+    document.body.appendChild(snapPreview);
+
+    const applySnap = (win, side) => {
+        // 1. QUITAMOS el bloqueo de animación para que la ventana "vuele" a su sitio
+        $(win).removeClass('is-dragging');
+
+        // 2. Guardamos posición previa si no estaba maximizada
+        if (!win.classList.contains('window--maximized') && !$(win).hasClass('window--snap-left')) {
+            win.dataset.preTop = win.style.top;
+            win.dataset.preLeft = win.style.left;
+            win.dataset.preWidth = win.style.width;
+            win.dataset.preHeight = win.style.height;
+        }
+
+        $(win).removeClass('window--snap-left window--snap-right window--maximized');
+
+        // 3. Aplicamos la posición final (el CSS hará la transición suave)
+        if (side === 'top') {
+            $(win).addClass('window--maximized');
+            Object.assign(win.style, { top: "30px", left: "0px", width: "100vw", height: "calc(100vh - 115px)" });
+        } else if (side === 'left') {
+            $(win).addClass('window--snap-left');
+            Object.assign(win.style, { top: "30px", left: "0px", width: "50vw", height: "calc(100vh - 115px)" });
+        } else {
+            $(win).addClass('window--snap-right');
+            Object.assign(win.style, { top: "30px", left: "50vw", width: "50vw", height: "calc(100vh - 115px)" });
+        }
+        
+        snapPreview.style.opacity = '0';
+    };
+
+const baseConfig = {
+        // ELIMINAMOS containment para que la ventana sea libre
+        start: function(event, ui) { 
+            $(this).addClass('is-dragging');
+            
+            if ($(this).hasClass('window--maximized') || $(this).hasClass('window--snap-left') || $(this).hasClass('window--snap-right')) {
+                const oldWidth = parseInt(this.dataset.preWidth) || 900;
+                $(this).removeClass('window--snap-left window--snap-right window--maximized');
+                this.style.width = oldWidth + "px";
+                this.style.height = (this.dataset.preHeight || "550px");
+                ui.position.left = event.pageX - (oldWidth / 2);
+            }
+        },
+        drag: function(event, ui) { 
+            // SOLO BLOQUEAMOS EL BORDE SUPERIOR (Navbar 30px)
+            if (ui.position.top < 30) ui.position.top = 30;
+
+            // La detección de Snap sigue funcionando igual
+            const margin = 15;
+            if (event.pageY < 40) { 
+                snapPreview.style.display = 'block'; snapPreview.style.left = '0'; snapPreview.style.width = '100%';
+                setTimeout(() => snapPreview.style.opacity = '1', 10);
+                if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(this, 'top'), 1000);
+            } else if (event.pageX < margin) { 
+                snapPreview.style.display = 'block'; snapPreview.style.left = '0'; snapPreview.style.width = '50%';
+                setTimeout(() => snapPreview.style.opacity = '1', 10);
+                if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(this, 'left'), 1000);
+            } else if (event.pageX > window.innerWidth - margin) { 
+                snapPreview.style.display = 'block'; snapPreview.style.left = '50%'; snapPreview.style.width = '50%';
+                setTimeout(() => snapPreview.style.opacity = '1', 10);
+                if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(this, 'right'), 1000);
+            } else {
+                snapPreview.style.opacity = '0';
+                clearTimeout(snapTimeout); snapTimeout = null;
+            }
+        },
+        stop: function() { 
+            $(this).removeClass('is-dragging');
+            snapPreview.style.opacity = '0';
+            clearTimeout(snapTimeout); snapTimeout = null;
+        }
+    };
+
+    $(".terminal, .note, .maps, .safari, .music").draggable({ ...baseConfig, handle: ".window__taskbar" });
+    $(".calculator").draggable({ ...baseConfig, handle: ".calculator__top" });
+    $(".settings-app").draggable({ ...baseConfig, handle: ".settings_window__taskbar" });
+}
 });
 
-// Date and time
+// Date Time
 const dateElement = document.getElementById("date");
-const currentDate = new Date();
-dateElement.innerHTML = currentDate.toDateString();
-
+dateElement.innerHTML = new Date().toDateString();
 function digi() {
   const date = new Date();
   let hour = date.getHours();
-  let minute = checkTime(date.getMinutes());
-
-  function checkTime(i) {
-    if (i < 10) {
-      i = "0" + i;
-    }
-    return i;
-  }
-
-  if (hour > 12) {
-    hour = hour - 12;
-    if (hour === 12) {
-      hour = checkTime(hour);
-      elements.clockElement.innerHTML = hour + ":" + minute + " AM";
-    } else {
-      hour = checkTime(hour);
-      elements.clockElement.innerHTML = hour + ":" + minute + " PM";
-    }
-  } else {
-    elements.clockElement.innerHTML = hour + ":" + minute + " AM";
-  }
+  let minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+  let ampm = hour >= 12 ? " PM" : " AM";
+  hour = hour % 12 || 12;
+  elements.clockElement.innerHTML = (hour < 10 ? "0"+hour : hour) + ":" + minute + ampm;
 }
 
+// Terminal line
 let terminal_line_html = document.querySelector(".terminal_line").outerHTML;
 let path = "~";
-let dirName;
 let dirs = ["Desktop", "Downloads", "Music", "Documents"];
-
 function init_terminal_line() {
-  $(".cursor").keydown(function (e) {
+  $(".cursor").unbind("keydown").keydown(function (e) {
     if (e.keyCode === 13) {
-      console.log("hello");
       e.preventDefault();
-      let command = $(this).text().trim(); // Use .text() for contenteditable elements
+      let command = $(this).text().trim();
       if (!command) return;
-
       let command_output = "zsh: command not found: " + command + "<br>";
-
-      if (command.startsWith("cd ")) {
-        path = command.substring(3);
-        command_output = "";
-      } else if (command === "ls") {
-        command_output = dirs.join("\t");
-      } else if (command === "pwd") {
-        command_output = path + "/";
-      } else if (command.startsWith("mkdir ")) {
-        dirName = command.substring(6);
-        dirs.push(dirName);
-        command_output = "";
-      } else if (command === "rmdir") {
-        dirs.pop();
-        command_output = "";
-      } else if (command === "ps -aux") {
-        command_output = "CPU = 56% <br> MEMORY = 25% <br> DISK = 34%";
-      } else if (command.startsWith("cat ")) {
-        command_output =
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit.<br> Fugiat nihil totam expedita sint necessitatibus quos ducimus.";
-      } else if (command.startsWith("du -hs ")) {
-        command_output = Math.floor(Math.random() * 100) + "GB";
-      }
-
-      $(this).removeAttr("contenteditable");
-      $(this).removeClass("cursor");
-      terminalApp.content.innerHTML += command_output; // Use .innerHTML to append string content
-      let new_terminal_line_html = terminal_line_html.replace("~", path);
-      terminalApp.content.innerHTML += new_terminal_line_html;
+      if (command.startsWith("cd ")) { path = command.substring(3); command_output = ""; }
+      else if (command === "ls") command_output = dirs.join("\t");
+      else if (command === "pwd") command_output = path + "/";
+      $(this).removeAttr("contenteditable").removeClass("cursor");
+      terminalApp.content.innerHTML += command_output;
+      terminalApp.content.innerHTML += terminal_line_html.replace("~", path);
       placeCaretAtEnd(document.querySelector(".cursor"));
       init_terminal_line();
     }
   });
 }
-
 init_terminal_line();
-terminalApp.content.addEventListener("click", function () {
-  placeCaretAtEnd(document.querySelector(".cursor"));
-});
-
+terminalApp.content.addEventListener("click", () => placeCaretAtEnd(document.querySelector(".cursor")));
 function placeCaretAtEnd(el) {
   el.focus();
-  var range = document.createRange();
-  range.selectNodeContents(el);
+  var range = document.createRange(); range.selectNodeContents(el);
   range.collapse(false);
-  var sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
+  var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
 }
 
-// Right click to desktop
-document.onclick = hideMenu;
-document.oncontextmenu = rightClick;
-
-function hideMenu() {
-  document.getElementById("contextMenu").style.opacity = "0";
-}
-
-function rightClick(e) {
+// Context Menu
+document.onclick = () => document.getElementById("contextMenu").style.opacity = "0";
+document.oncontextmenu = (e) => {
   e.preventDefault();
-
-  if (document.getElementById("contextMenu").style.opacity == "1") hideMenu();
-  else {
-    var menu = document.getElementById("contextMenu");
-
-    menu.style.opacity = "1";
-    menu.style.left = e.pageX + "px";
-    menu.style.top = e.pageY + "px";
-  }
-}
-
-// Loading
-// const load = document.getElementById("loading");
-// function lockload() {
-//   load.style.display = "none";
-// }
-
-/********** Start Battery **********/
-const calculateBattery = () => {
-  let number = Math.floor(Math.random() * 100); 
-  let batteryIsCharging = false; 
-
-  navigator
-    .getBattery()
-    .then(function (battery) {
-      number = Math.floor(battery.level * 100); // Añadido Math.floor para evitar decimales largos
-
-      batteryIsCharging = battery.charging;
-      battery.addEventListener("chargingchange", function () {
-        batteryIsCharging = battery.charging;
-      });
-    })
-    .finally(() => {
-      elements.batteryText.textContent = `${number}%`;
-      elements.batteryProgress.style.width = `${number}%`;
-      elements.batteryPopupText.textContent = `${number}%`;
-
-      if (number <= 20) {
-        elements.batteryProgress.classList.add("battery__low");
-      } else if ((number > 90 && batteryIsCharging) || batteryIsCharging) {
-        elements.batteryProgress.classList.add("battery__high");
-        elements.batteryIsChargingLogo.classList.add("is-charging-visibel");
-        elements.powerSource.textContent = "Power Adapter";
-      }
-    });
+  var menu = document.getElementById("contextMenu");
+  menu.style.opacity = "1";
+  menu.style.left = e.pageX + "px";
+  menu.style.top = e.pageY + "px";
 };
 
-// 1. Función para cerrar el popup limpiamente
+// Battery and Spotlight Control
+const calculateBattery = () => {
+  navigator.getBattery().then(battery => {
+    let number = Math.floor(battery.level * 100);
+    elements.batteryText.textContent = `${number}%`;
+    elements.batteryProgress.style.width = `${number}%`;
+    elements.batteryPopupText.textContent = `${number}%`;
+  });
+};
+
 const closeBatteryPopup = () => {
   elements.batteryPopup.classList.remove("opened");
   elements.batteryButton.classList.remove("selected");
 };
 
-// 2. Listener del botón (con stopPropagation para evitar que el clic llegue al document)
 elements.batteryButton.addEventListener("click", (e) => {
   e.stopPropagation(); 
   elements.batteryPopup.classList.toggle("opened");
   elements.batteryButton.classList.toggle("selected");
 });
 
-// 3. Evitar que al hacer clic DENTRO del popup abierto se cierre
-elements.batteryPopup.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
+elements.batteryPopup.addEventListener("click", (e) => e.stopPropagation());
 
-// 4. Clic en cualquier otro lugar (Escritorio/Wallpaper) cierra el popup
 document.addEventListener("click", () => {
   closeBatteryPopup();
-  closeControlCenter();
+  controlCenterMenu.classList.remove("opened");
 });
 
-/********** End Battery **********/
-
-// 1. Seleccionamos los elementos
 const controlCenterBtn = document.querySelector(".control-center");
 const controlCenterMenu = document.querySelector(".menu__container");
-
-// 2. Función para cerrar el Control Center
-const closeControlCenter = () => {
-  controlCenterMenu.classList.remove("opened");
-};
-
-// 3. Evento para el botón del Control Center
 controlCenterBtn.addEventListener("click", (e) => {
-  e.stopPropagation(); // Evita que el clic llegue al document
-  
-  // Cerramos el menú de batería si está abierto para que no se solapen
-  if (typeof closeBatteryPopup === "function") closeBatteryPopup();
-  
+  e.stopPropagation();
+  closeBatteryPopup();
   controlCenterMenu.classList.toggle("opened");
 });
+controlCenterMenu.addEventListener("click", (e) => e.stopPropagation());
 
-// 4. Evitar que el menú se cierre al hacer clic en los sliders o botones internos
-controlCenterMenu.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
-
-// 1. EL BOTÓN (La Lupa)
 elements.open_spotlight.onclick = (e) => {
-    // ESTO ES LO MÁS IMPORTANTE:
-    // Detiene TODOS los demás scripts que quieran actuar sobre este clic
     e.stopImmediatePropagation();
     e.preventDefault();
-
     const isOpen = elements.spotlight_search.classList.contains("opened");
-
     if (isOpen) {
         elements.spotlight_search.classList.remove("opened");
     } else {
-        // Cerramos otros menús si estuvieran abiertos
-        if (elements.batteryPopup) elements.batteryPopup.classList.remove("opened");
-        const cc = document.querySelector(".menu__container");
-        if (cc) cc.classList.remove("opened");
-
-        // Abrimos Spotlight
+        closeBatteryPopup();
+        controlCenterMenu.classList.remove("opened");
         elements.spotlight_search.classList.add("opened");
-        
-        // Foco al input
         const input = elements.spotlight_search.querySelector("input");
         if (input) setTimeout(() => input.focus(), 50);
     }
 };
 
-// 2. EL BUSCADOR (Para que no se cierre al escribir)
-elements.spotlight_search.onclick = (e) => {
-    e.stopImmediatePropagation();
-};
+elements.spotlight_search.onclick = (e) => e.stopImmediatePropagation();
+document.addEventListener("click", () => elements.spotlight_search.classList.remove("opened"), true);
 
-// 3. EL CIERRE GLOBAL (Al clicar en el fondo de pantalla)
-document.addEventListener("click", (e) => {
-    // Si el menú está abierto, lo quitamos
-    if (elements.spotlight_search.classList.contains("opened")) {
-        elements.spotlight_search.classList.remove("opened");
-    }
-}, true); // El 'true' aquí le da prioridad al navegador para limpiar
-
-// Call the functions
 calculateBattery();
 digi();
+setInterval(digi, 1000);
