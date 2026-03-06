@@ -2159,7 +2159,7 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
 
 /* Esquina Superior Izquierda (Top-Left) */
 .resizer.tl {
-    top: -3px;
+    top: -2px;
     left: -5px;
     width: 16px;
     height: 16px;
@@ -2169,7 +2169,7 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
 
 /* Esquina Superior Derecha (Top-Right) */
 .resizer.tr {
-    top: -3px;
+    top: -2px;
     right: -5px;
     width: 16px;
     height: 16px;
@@ -2179,11 +2179,18 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
 
 /* Aseguramos que los bordes laterales y el superior también tengan buena área de agarre */
 .resizer.t { 
-    top: -5px; 
-    left: 10px; 
-    right: 10px; 
-    height: 10px; 
-    cursor: n-resize; 
+top: -6px;
+width: 97%;
+left: 12px;
+right: 10px;
+height: 10px;
+cursor: n-resize;
+}
+
+.resizer.l, .resizer.r {
+width: 10px;
+height: 94%;
+top: 10px;
 }
 
 /* Ajuste de prioridad: los botones de la taskbar deben estar POR ENCIMA 
