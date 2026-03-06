@@ -291,9 +291,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            function stopResize() {
+function stopResize() {
                 isResizing = false; 
                 win.classList.remove('resizing');
+
+                // Si al soltar, la ventana está por encima de la Menu Bar (30px)
+                if (parseInt(win.style.top) < 30) {
+                    // Restauramos a los valores iniciales capturados al inicio de initResize
+                    win.style.width = startWidth + 'px';
+                    win.style.height = startHeight + 'px';
+                    win.style.top = startTop + 'px';
+                    win.style.left = startLeft + 'px';
+                }
+
                 window.removeEventListener('mousemove', doResize);
                 window.removeEventListener('mouseup', stopResize);
             }
@@ -301,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.addEventListener('mouseup', stopResize);
         }
     }
-
     const allWins = document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, #about-window');
     allWins.forEach(makeResizable);
 });
