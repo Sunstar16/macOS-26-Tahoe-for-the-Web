@@ -408,6 +408,73 @@ function applySnap(win, side) {
 }
 
 /**************************************************************
+ * MAGNIFICACIÓN EN EL DOCK (CORREGIDA)
+ **************************************************************/
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dock = document.querySelector('.dock');
+  const dockIcons = document.querySelectorAll('.dock .icon img');
+
+  const MAX_SCALE = 1.7; 
+  const RANGE = 195;    
+  const MAX_LIFT = 15; 
+  
+  // --- CONFIGURACIÓN DE LA ALTERNATIVA (Lerp) ---
+  const smoothness = 0.20; // Entre 0 y 1. (0.1 = muy suave, 0.5 = más rápido)
+  let intensities = Array(dockIcons.length).fill(0); // Estado actual de cada icono
+
+  function update() {
+    dockIcons.forEach((icon, index) => {
+      // 1. Obtenemos el objetivo (target) basado en el mouse
+      const targetIntensity = icon.dataset.targetIntensity || 0;
+      
+      // 2. INTERPOLACIÓN (La magia): 
+      // El valor actual se acerca al objetivo un poquito en cada frame.
+      // Esto crea una entrada y salida suave de forma natural sin usar CSS.
+      intensities[index] += (targetIntensity - intensities[index]) * smoothness;
+
+      const intensity = intensities[index];
+      const scale = 1 + (MAX_SCALE - 1) * intensity;
+      const lift = intensity * MAX_LIFT;
+      const margin = intensity * 20;
+
+      // 3. Aplicamos el estilo (Usamos 'none' para que no haya conflicto con CSS)
+      icon.style.transition = "none"; 
+      icon.style.transform = `translateY(-${lift}px) scale(${scale})`;
+      icon.style.margin = `0 ${margin}px`;
+    });
+
+    requestAnimationFrame(update); // Ejecuta esto 60 veces por segundo
+  }
+
+  // Iniciamos el bucle de renderizado
+  requestAnimationFrame(update);
+
+  dock.addEventListener('mousemove', (e) => {
+    const mouseX = e.clientX;
+
+    dockIcons.forEach(icon => {
+      const rect = icon.getBoundingClientRect();
+      const iconCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(mouseX - iconCenter);
+
+      if (distance < RANGE) {
+        // En lugar de aplicar el estilo, solo guardamos el "objetivo"
+        const ratio = (RANGE - distance) / RANGE;
+        icon.dataset.targetIntensity = ratio;
+      } else {
+        icon.dataset.targetIntensity = 0;
+      }
+    });
+  });
+
+  dock.addEventListener('mouseleave', () => {
+    dockIcons.forEach(icon => {
+      icon.dataset.targetIntensity = 0;
+    });
+  });
+});
+/**************************************************************
  * macOS Tahoe - Logic + Shake to Find
  **************************************************************/
 let isDragging = false; 
