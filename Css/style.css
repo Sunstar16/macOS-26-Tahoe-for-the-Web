@@ -593,14 +593,13 @@ bottom: 1%;
 left: 50%;
 height: 64px;
 transform: translateX(-50%);
-backdrop-filter: url("#glass-distortion") blur(3.2px);
--webkit-backdrop-filter: blur(3.2px);
-border: 0.5px solid rgba(255, 255, 255, 0.001);
-border-radius: 20px;
+backdrop-filter: url("#glass-distortion") blur(4px);
+-webkit-backdrop-filter: blur(4px);
+border: 1px solid rgba(255, 255, 255, 0.18);
+box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.05), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.05);
+border-radius: 1.2rem;
 z-index: 99998 !important;
-background-image: url("../background/DockBackground75.png");
-background-size: 101.45% 121%;
-background-position: -8px -7.3px;
+background: rgba(255, 255, 255, 0.15);
 cursor: url("../cursor/normal-select.png"), auto !important;
 }
 
@@ -663,19 +662,9 @@ cursor: url("../cursor/normal-select.png"), auto !important;
   transform: translateY(-2.5px);
 }
 
-.dock .icon:hover img {
-  margin: 0 0 40px 0;
-  width: 7.1rem;
-}
-
-.dock .icon:hover + * img {
-  width: 5.6rem;
-  margin: 0 0 25px 0;
-}
-
-.dock .icon:has(+ *:hover) img {
-  width: 5.6rem;
-  margin: 0 0 25px 0;
+.dock .icon {
+  transform-origin: bottom; /* Los iconos crecen hacia arriba */
+  transition: transform 0.2s ease-out; /* Suaviza el regreso a la normalidad */
 }
 
 .dock .icon img:active {
