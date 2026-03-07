@@ -1473,7 +1473,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 /* 3. La etiqueta (Bocadillo gris claro) */
 .dock .icon .dock-label {
   position: absolute;
-  bottom: 180%; /* Flota sobre el icono */
+  bottom: 195%; /* Flota sobre el icono */
   left: 50%;
   transform: translateX(-50%) translateY(0);
   
