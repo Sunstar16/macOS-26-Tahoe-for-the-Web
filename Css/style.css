@@ -591,7 +591,7 @@ position: fixed;
 padding: 0.2rem 0.4rem 0px;
 bottom: 1%;
 left: 50%;
-height: 64px;
+height: 63px;
 transform: translateX(-50%);
 backdrop-filter: url("#glass-distortion") blur(4px);
 -webkit-backdrop-filter: blur(4px);
@@ -658,24 +658,11 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .dock .icon img {
   width: 3.6rem;
-  transition: 0.2s;
-  transform: translateY(-2.5px);
+
+  transform-origin: bottom center; /* Crece hacia arriba */
+  display: block;
 }
 
-.dock .icon:hover img {
-  margin: 0 0 40px 0;
-  width: 7.1rem;
-}
-
-.dock .icon:hover + * img {
-  width: 5.6rem;
-  margin: 0 0 25px 0;
-}
-
-.dock .icon:has(+ *:hover) img {
-  width: 5.6rem;
-  margin: 0 0 25px 0;
-}
 
 .dock .icon img:active {
 
@@ -1486,7 +1473,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 /* 3. La etiqueta (Bocadillo gris claro) */
 .dock .icon .dock-label {
   position: absolute;
-  bottom: 110%; /* Flota sobre el icono */
+  bottom: 180%; /* Flota sobre el icono */
   left: 50%;
   transform: translateX(-50%) translateY(0);
   
