@@ -866,54 +866,97 @@ font-display: block;
       <!-- Vscode app end -->
       
 
+<!-- Settings App -->
 <div class="settings-app window-style" style="display: none;">
+  <!-- Taskbar -->
   <div class="settings_window__taskbar ui-draggable-handle">
     <div class="window__taskbar--actions">
       <button class="close-map red-radius"></button>
       <button class="backfull-map yellow-radius"></button>
       <button class="full-map green-radius"></button>
     </div>
-    <div class="window__taskbar--content">
-      <p></p>
-    </div>
   </div>
 
   <div class="content settings-layout">
+    <!-- Sidebar -->
     <aside class="settings-sidebar">
       <div class="s-search">
-<svg width="24" height="24">
-    <path d="M10,18c1.846,0,3.543-0.635,4.897-1.688l4.396,4.396l1.414-1.414l-4.396-4.396C17.365,13.543,18,11.846,18,10 c0-4.411-3.589-8-8-8s-8,3.589-8,8S5.589,18,10,18z M10,4c3.309,0,6,2.691,6,6s-2.691,6-6,6s-6-2.691-6-6S6.691,4,10,4z"></path>
-  </svg>
-<input type="text" placeholder="Search"></div>
+        <svg width="24" height="24"><path d="M10,18c1.846,0,3.543-0.635,4.897-1.688l4.396,4.396l1.414-1.414l-4.396-4.396C17.365,13.543,18,11.846,18,10 c0-4.411-3.589-8-8-8s-8,3.589-8,8S5.589,18,10,18z M10,4c3.309,0,6,2.691,6,6s-2.691,6-6,6s-6-2.691-6-6S6.691,4,10,4z"></path></svg>
+        <input type="text" placeholder="Search">
+      </div>
+
+      <div class="s-user-profile">
+        <img src="icon/about/avatar.png" alt="User" class="s-avatar"> <!-- Replace with your avatar -->
+        <div class="s-user-info">
+          <span class="s-name">Luis González Antúnez</span>
+          <span class="s-sub">Apple Account</span>
+        </div>
+      </div>
+
       <nav class="s-nav">
-        <div class="s-item active">🎨 Appearance</div>
-        <div class="s-item">🖼️ Wallpaper</div>
-        <div class="s-item">☀️ Displays</div>
+        <div class="s-item"><span class="s-icon wifi">📡</span> Wi-Fi</div>
+        <div class="s-item"><span class="s-icon bluetooth">🔷</span> Bluetooth</div>
+        <div class="s-item"><span class="s-icon network">🌐</span> Network</div>
+        <div class="s-item active"><span class="s-icon general">⚙️</span> General</div>
+        <div class="s-item"><span class="s-icon accessibility">👤</span> Accessibility</div>
+        <div class="s-item"><span class="s-icon appearance">🎨</span> Appearance</div>
+        <div class="s-item"><span class="s-icon wallpaper">🖼️</span> Wallpaper</div>
+        <div class="s-item"><span class="s-icon displays">☀️</span> Displays</div>
       </nav>
     </aside>
-    <main class="settings-main">
-<div class="arrow-button-group">
-<div class="arrow-button-background">
-  <button class="arrow-circle-btn">
-    <img src="icon/symbols/Back-Symbol.png" alt="Back">
-  </button>
 
-  <button class="arrow-circle-btn">
-    <img src="icon/symbols/Forward-Symbol.png" alt="Forward">
-  </button>
-</div>
-</div>
-      <h1>Coming Soon...</h1>
-      <div class="s-card">
-        <div class="s-row">
-          <span>Stay Tuned!</span>
-          <div class="s-switch active"></div>
+    <!-- Main Content -->
+    <main class="settings-main">
+      <div class="settings-header-nav">
+        <div class="arrow-button-background">
+          <button class="arrow-circle-btn"><img src="icon/symbols/Back-Symbol.png" alt="Back"></button>
+          <button class="arrow-circle-btn"><img src="icon/symbols/Forward-Symbol.png" alt="Forward"></button>
+        </div>
+      </div>
+
+      <div class="settings-view-content">
+        <div class="main-category-header">
+          <div class="category-icon-large">⚙️</div>
+          <h1>General</h1>
+          <p>Manage general settings and preferences for your Mac, such as software updates, language, AirDrop, etc.</p>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="row-left"><span class="row-icon">💻</span> About</div>
+            <div class="row-right"><span class="arrow-glyph">›</span></div>
+          </div>
+          <div class="settings-row">
+            <div class="row-left"><span class="row-icon">🔄</span> Software Update</div>
+            <div class="row-right"><span class="arrow-glyph">›</span></div>
+          </div>
+          <div class="settings-row">
+            <div class="row-left"><span class="row-icon">💾</span> Storage</div>
+            <div class="row-right"><span class="arrow-glyph">›</span></div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="row-left"><span class="row-icon">🍎</span> AppleCare & Warranty</div>
+            <div class="row-right"><span class="arrow-glyph">›</span></div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="row-left"><span class="row-icon">📶</span> AirDrop & Handoff</div>
+            <div class="row-right"><span class="arrow-glyph">›</span></div>
+          </div>
+          <div class="settings-row">
+            <div class="row-left"><span class="row-icon">⌨️</span> AutoFill & Passwords</div>
+            <div class="row-right"><span class="arrow-glyph">›</span></div>
+          </div>
         </div>
       </div>
     </main>
   </div>
 </div>
-
 
       <div class="window maps">
         <div class="window__taskbar">
