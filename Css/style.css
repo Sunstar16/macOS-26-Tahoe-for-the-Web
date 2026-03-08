@@ -1867,7 +1867,7 @@ color: white;
 
 .settings_window__taskbar {
     position: absolute;
-    width: 25%;
+    width: 225px;
     top: 12px;
     left: -16px;
     scale: 82%;
@@ -2058,6 +2058,129 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
     position: relative;
     top: 95px;
 }
+
+/* User Profile in Sidebar */
+.s-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-top: 50px; /* Space for search bar */
+    margin-bottom: 15px;
+}
+
+.s-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.s-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.s-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+.s-sub {
+    font-size: 11px;
+    color: #86868b;
+}
+
+/* Category Header in Main View */
+.main-category-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 0 40px;
+}
+
+.category-icon-large {
+    font-size: 50px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+}
+
+.main-category-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.main-category-header p {
+    font-size: 12px;
+    color: #86868b;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+/* Grouped Rows */
+.settings-group {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    margin: 0 20px 15px 20px;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.settings-row:not(:last-child) {
+    border-bottom: 0.5px solid rgba(0,0,0,0.05);
+}
+
+.settings-row:hover {
+    background: rgba(0,0,0,0.03);
+}
+
+.row-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.row-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.arrow-glyph {
+    color: #c7c7cc;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+/* Sidebar Icon Colors (matching the screenshot) */
+.s-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    margin-right: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+.s-icon.general { background: #007aff; }
+.s-icon.wifi { background: #007aff; }
+.s-icon.bluetooth { background: #007aff; }
+.s-icon.accessibility { background: #007aff; }
+/* Add more colors as needed */
 
 .arrow-button-group {
     position: relative;
