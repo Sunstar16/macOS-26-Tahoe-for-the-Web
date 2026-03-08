@@ -658,7 +658,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .dock .icon img {
   width: 3.6rem;
-
+  margin-bottom: 7px !important;
   transform-origin: bottom center; /* Crece hacia arriba */
   display: block;
 }
@@ -1866,15 +1866,15 @@ color: white;
 }
 
 .settings_window__taskbar {
-    position: absolute;
-    width: 225px;
-    top: 12px;
-    left: -16px;
-    scale: 82%;
-    height: 6%;
-    display: flex;
-    padding: 0 16px;
-    border-radius: 22px;
+position: absolute;
+width: 225px;
+top: 15px;
+left: -14px;
+scale: 82%;
+height: 32px;
+display: flex;
+padding: 0 16px;
+border-radius: 22px;
 }
 
 .settings_window__taskbar--actions {
@@ -1973,35 +1973,25 @@ color: white;
 }
 
 .settings-sidebar {
-    width: 180px;
-    height: 494.5px;
-    background: rgba(255, 255, 255, 0.9);
-    background: linear-gradient(
-135deg, 
-rgba(0, 191, 255, 0.15) -85%,   /* Azul macOS */
-rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
-);
-    padding: 20px 15px;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 8px;
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    box-shadow: 0 15px 15px rgba(0,0,0,0.2);
-    overflow: hidden;
-    border-radius: 20px;
+width: 182px;
+background: linear-gradient(135deg, rgba(0, 191, 255, 0.15) -85%, rgba(225, 225, 225, 0.5) 100%) border-box padding-box, linear-gradient(135deg, rgba(0, 191, 255, 0.15) -85%, rgba(225, 225, 225, 0.5) 100%);
+padding: 18px 15px;
+margin: 0.8% 8px 1%;
+box-shadow: rgba(0, 0, 0, 0.2) -1px 15px 15px;
+overflow: hidden;
+border-radius: 20px;
 }
 
 .settings-main {
-    position: relative;
-    flex: 1;
-    padding: 30px;
-    overflow-y: auto;
-    color: black;
+position: relative;
+flex: 1 1 0%;
+padding: 15px;
+overflow-y: auto;
+color: black;
 }
 
 .s-item {
-    padding: 8px 12px;
+    padding: 3px 0px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
@@ -2028,15 +2018,17 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
 }
 
 .s-search {
-    position: absolute;
-    background-color: #D1D1D1;
-    left: 18px;
-    padding-left: 20px;
-    width: 170px;
-    height: 24px;
-    border-radius: 50px;
-    top: 55px;
+position: relative;
+background-color: rgb(209, 209, 209);
+left: -4px;
+padding-left: 12%;
+/* margin-left: 0%; */
+width: 92%;
+height: 24px;
+border-radius: 50px;
+top: 38px;
 }
+
 .s-search svg {
     left: 3px;
     top: -1.5px;
@@ -2050,13 +2042,12 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
     position: relative;
     font-size: 12px;
     top: 1.5px;
-    right: -7px !important;
+    right: -5px !important;
 }
 
 
 .s-nav {
     position: relative;
-    top: 95px;
 }
 
 /* User Profile in Sidebar */
@@ -2067,6 +2058,7 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
     padding: 10px;
     margin-top: 50px; /* Space for search bar */
     margin-bottom: 15px;
+    margin-left: -12px;
 }
 
 .s-avatar {
@@ -2256,7 +2248,7 @@ rgba(225, 225, 225, 0.5) 100% /* Blanco Tahoe */
 .window--maximized {
     transition: all 0.2s ease-in-out;
     box-shadow: none !important;
-    border-radius: 12px !important;
+
 }
 
 /* Esta es la clave: cuando la ventana se está moviendo o redimensionando, 
