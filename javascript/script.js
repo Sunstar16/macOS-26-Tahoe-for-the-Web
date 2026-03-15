@@ -113,9 +113,9 @@ const musicApp = {
   opening: document.querySelector(".open-music"),
 };
 
-// App Store App (CLONE)
+// App Store App
 const appStoreApp = {
-  app_name: document.querySelector("#Appstore-nav"), // <--- Cambia esto de null a esta línea
+  app_name: document.querySelector("#Appstore-nav"),
   window: document.querySelector(".appstore"),
   full: document.querySelector(".appstore .full-appstore"),
   close: document.querySelector(".appstore .close-appstore"),
@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function centerWindow(win) {
     const x = (window.innerWidth / 2) - (win.offsetWidth / 2);
     const y = (window.innerHeight / 2) - (win.offsetHeight / 2);
-
     win.style.left = x + "px";
     win.style.top = y + "px";
 }
@@ -530,7 +529,7 @@ function close_window(close, point, appName) {
 
 function open_window(open, point, appName) {
   elements.navbar.style.display = "flex";
-  open.style.display = "flex";
+  open.style.display = "block"; // VUELVE A BLOCK PARA NO ROMPER NOTAS/TERMINAL
   launchpad.container.style.display = "flex";
   launchpad.window.style.display = "none";
   launchpad.point.style.display = "none";
@@ -547,7 +546,7 @@ settingsApp.close.addEventListener("click", () => close_window(settingsApp.windo
 musicApp.opening.addEventListener("click", () => open_window(musicApp.window, musicApp.point, musicApp.app_name));
 musicApp.close.addEventListener("click", () => close_window(musicApp.window, musicApp.point, musicApp.app_name));
 
-// APP STORE LISTENERS (CORREGIDO)
+// APP STORE LISTENERS
 appStoreApp.opening.addEventListener("click", () => open_window(appStoreApp.window, appStoreApp.point, appStoreApp.app_name));
 appStoreApp.close.addEventListener("click", () => close_window(appStoreApp.window, appStoreApp.point, appStoreApp.app_name));
 
