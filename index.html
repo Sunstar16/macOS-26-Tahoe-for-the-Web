@@ -120,7 +120,8 @@ font-display: block;
         </li>
         <li class="leftLi app_name" id="Music-nav">Music
         </li>
-
+        <li class="leftLi app_name" id="Appstore-nav">App Store
+        </li>
         <li class="leftLi app_name" id="Settings-nav">System Settings
         </li>
 <li class="leftLi">
@@ -518,10 +519,11 @@ font-display: block;
         <span class="point hidden" id="point-music"></span>
       </button>
 
-      <button class="icon">
-      <span class="dock-label">App Store</span>
-        <img src="./icon/dock/appstore.png" alt="App Store Logo" />
-      </button>
+<button class="icon open-appstore"> <!-- Añadida clase open-appstore -->
+  <span class="dock-label">App Store</span>
+  <img src="./icon/dock/appstore.png" alt="App Store Logo" />
+  <hr class="point hidden" id="point-appstore" /> <!-- Añadido punto indicador -->
+</button>
      
 
 
@@ -1010,11 +1012,28 @@ font-display: block;
   </div>
   <div class="content">
     <iframe 
-      src="https://embed.music.apple.com/us/playlist/todays-hits/pl.f4d106fed2bd41149aaacabb233eb5eb?itscg=30200&amp;itsct=music_box_player&amp;ls=1&amp;app=music&amp;mttnsubad=pl.f4d106fed2bd41149aaacabb233eb5eb&amp;theme=auto" 
+      src="https://freefy.app" 
       width="100%" 
       height="100%" 
       style="border: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
     </iframe>
+  </div>
+</div>
+
+
+<div class="window appstore">
+  <div class="window__taskbar">
+    <div class="window__taskbar--actions">
+      <button class="close-appstore red-radius"></button>
+      <button class="backfull-appstore yellow-radius"></button>
+      <button class="full-appstore green-radius"></button>
+    </div>
+    <div class="window__taskbar--content">
+      <p>App Store</p>
+    </div>
+  </div>
+  <div class="content">
+    <iframe src="https://app-store-recreation.vercel.app" style="border: none;"></iframe>
   </div>
 </div>
 
