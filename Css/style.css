@@ -1593,8 +1593,9 @@ color: white;
   pointer-events: none !important;
 }
 
+/* Music App - Ajustado al 95% para evitar cortes por debajo */
 .music {
-  flex-grow: 1;
+  position: absolute !important;
   width: 900px;
   height: 478px;
   background-color: var(--app-color-white);
@@ -1606,18 +1607,34 @@ color: white;
   display: none; 
   flex-direction: column;
   overflow: hidden;
+
 }
 
-/* Music App Iframe - Consistencia total con Safari */
+.music .window__taskbar {
+  flex: 0 0 35px; /* Altura fija */
+  height: 35px;
+  background-color: var(--app-color-white);
+}
+
+.music .content {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start; /* Alinea el iframe arriba */
+  align-items: flex-start;
+  width: 100%;
+  background-color: #000; /* Fondo negro para que no se vea el hueco del 5% */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 .music iframe {
-  position: absolute;
-  flex-grow: 1;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  width: 100%;
+  border: none;
   display: block;
+  margin: 0;
+  padding: 0;
 }
-
-
 /* Animación de salida: de normal a grande y transparente */
 @keyframes close-opacity {
   0% {
@@ -2326,7 +2343,6 @@ top: 10px;
     top: 30px !important;
     width: 50vw !important;
     height: calc(100vh - 30px - 85px) !important;
-    border-radius: 12px !important;
 }
 
 .window--snap-right {
@@ -2334,5 +2350,46 @@ top: 10px;
     top: 30px !important;
     width: 50vw !important;
     height: calc(100vh - 30px - 85px) !important;
-    border-radius: 12px !important;
+}
+
+/* App Store Window - Estructura anti-cortes */
+.appstore {
+  position: absolute !important;
+  width: 1000px; /* Un poco más ancha para las apps */
+  height: 650px;
+  background-color: var(--app-color-white);
+  top: 5%;
+  left: 15%;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: none; 
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.appstore .window__taskbar {
+  flex: 0 0 35px;
+  height: 35px;
+  background-color: var(--app-color-white);
+}
+
+.appstore .content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.appstore .content iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Aquí el 100% funciona gracias al absolute shield */
+  border: none;
+  display: block;
 }
