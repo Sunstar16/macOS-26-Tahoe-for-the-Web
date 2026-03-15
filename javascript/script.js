@@ -8,6 +8,7 @@ function change_brightness() {
   elements.body.style.backdropFilter = `brightness(${brightnessVal + '%'})`;
 }
 */
+
 /********** ELEMENTS **********/
 const elements = {
   body: document.querySelector("body"),
@@ -63,7 +64,7 @@ const terminalApp = {
   close: document.querySelector(".close"),
   backfull: document.querySelector(".backfull"),
   point: document.querySelector("#point-terminal"),
-  content: document.querySelector(".terminal .terminal_content"),
+  content: document.querySelector(".terminal_content"),
   taskbar: document.querySelector(".terminal .window__taskbar"),
   opening: document.querySelector(".open-terminal"),
 };
@@ -110,6 +111,17 @@ const musicApp = {
   backfull: document.querySelector(".music .backfull-map"),
   point: document.querySelector("#point-music"),
   opening: document.querySelector(".open-music"),
+};
+
+// App Store App (CLONE)
+const appStoreApp = {
+  app_name: document.querySelector("#Appstore-nav"), // <--- Cambia esto de null a esta línea
+  window: document.querySelector(".appstore"),
+  full: document.querySelector(".appstore .full-appstore"),
+  close: document.querySelector(".appstore .close-appstore"),
+  backfull: document.querySelector(".appstore .backfull-appstore"),
+  point: document.querySelector("#point-appstore"),
+  opening: document.querySelector(".open-appstore"),
 };
 
 
@@ -160,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBrightnessOverlay();
   }
   if (elements.spotlight_search) {
-    elements.spotlight_search.style.display = 'none';
+    elements.spotlight_search.classList.remove("opened");
   }
   if (typeof digi === 'function') {
     digi();
@@ -169,8 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función para centrar cualquier ventana manualmente
 function centerWindow(win) {
-    // Calculamos el centro restando la mitad del ancho/alto de la ventana 
-    // a la mitad del ancho/alto de la pantalla
     const x = (window.innerWidth / 2) - (win.offsetWidth / 2);
     const y = (window.innerHeight / 2) - (win.offsetHeight / 2);
 
@@ -180,20 +190,14 @@ function centerWindow(win) {
 
 // --- LÓGICA DE MAXIMIZADO UNIFICADA ---
 document.addEventListener('DOMContentLoaded', () => {
-    const maximizeButtons = document.querySelectorAll('.full, .full-note, .full-map, .max-cal');
+    const maximizeButtons = document.querySelectorAll('.full, .full-note, .full-map, .max-cal, .full-appstore');
 
     maximizeButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             
-            const win = btn.closest('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, #about-window');
+            const win = btn.closest('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, .appstore, #about-window');
             if (!win) return;
-
-            // EXCLUIR APPLE MUSIC
-            if (win.classList.contains('music')) {
-                console.log("Maximizado deshabilitado para Apple Music");
-                return; 
-            }
 
             const isMaximized = win.classList.contains('window--maximized');
 
@@ -209,13 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // MAXIMIZAR
     const rect = win.getBoundingClientRect();
 
-    // CAMBIO CLAVE: Solo guardamos la posición original si la ventana 
-    // NO está ya en un modo especial (ni snapped a la izquierda ni a la derecha).
-    // Esto evita que el tamaño de "50vw" se guarde como el tamaño original.
     if (!win.classList.contains('window--snap-left') && !win.classList.contains('window--snap-right')) {
         win.dataset.preTop = win.style.top || rect.top + "px";
         win.dataset.preLeft = win.style.left || rect.left + "px";
-        win.dataset.preWidth = rect.width + "px"; // Usamos rect.width para asegurar PÍXELES reales
+        win.dataset.preWidth = rect.width + "px"; 
         win.dataset.preHeight = rect.height + "px";
         win.dataset.preTransform = win.style.transform || "none";
     }
@@ -225,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const availableWidth = window.innerWidth;
     const availableHeight = window.innerHeight - navbarHeight - dockMargin;
 
-    // Quitamos las clases de snap por si acaso estaba en una de ellas
     win.classList.remove('window--snap-left', 'window--snap-right');
     
     win.classList.add('window--maximized');
@@ -240,16 +240,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const excludeList = ['.music']; 
+    const excludeList = []; 
     let isResizing = false; 
 
     function makeResizable(win) {
         if (excludeList.some(sel => win.matches(sel))) return;
 
         const resizers = ['r', 'b', 'rb', 'l', 'lb', 't', 'tl', 'tr'];
+        
+        const cursorMap = {
+            'r': 'e-resize', 'b': 's-resize', 'l': 'w-resize', 't': 'n-resize',
+            'rb': 'se-resize', 'lb': 'sw-resize', 'tl': 'nw-resize', 'tr': 'ne-resize'
+        };
+
         resizers.forEach(type => {
             const resizer = document.createElement('div');
             resizer.className = `resizer ${type}`;
+            
+            resizer.addEventListener('mouseenter', () => {
+                if (!isResizing) document.body.style.setProperty('cursor', cursorMap[type], 'important');
+            });
+            resizer.addEventListener('mouseleave', () => {
+                if (!isResizing) document.body.style.cursor = '';
+            });
+
             resizer.addEventListener('mousedown', (e) => {
                 e.preventDefault();
                 e.stopPropagation(); 
@@ -273,6 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             function doResize(e) {
                 if (!isResizing) return;
+                document.body.style.setProperty('cursor', cursorMap[type], 'important');
+
                 if (type.includes('r')) win.style.width = (startWidth + e.clientX - startX) + 'px';
                 if (type.includes('b')) win.style.height = (startHeight + e.clientY - startY) + 'px';
                 if (type.includes('t')) {
@@ -291,13 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-function stopResize() {
+            function stopResize() {
                 isResizing = false; 
                 win.classList.remove('resizing');
+                document.body.style.cursor = ''; 
 
-                // Si al soltar, la ventana está por encima de la Menu Bar (30px)
                 if (parseInt(win.style.top) < 30) {
-                    // Restauramos a los valores iniciales capturados al inicio de initResize
                     win.style.width = startWidth + 'px';
                     win.style.height = startHeight + 'px';
                     win.style.top = startTop + 'px';
@@ -311,101 +326,31 @@ function stopResize() {
             window.addEventListener('mouseup', stopResize);
         }
     }
-    const allWins = document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, #about-window');
+    const allWins = document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, .appstore, #about-window');
     allWins.forEach(makeResizable);
 });
 
 /**************************************************************
  * GESTIÓN DE CAPAS (TRAER AL FRENTE AL HACER CLIC)
  **************************************************************/
-let highestZ = 100; // Empezamos en 100 para estar por encima del fondo
+let highestZ = 100; 
 
 function focusWindow(win) {
     highestZ++;
     win.style.zIndex = highestZ;
 }
 
-// Aplicamos el evento a todas las ventanas
-document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, #about-window').forEach(win => {
+document.querySelectorAll('.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, .appstore, #about-window').forEach(win => {
     win.addEventListener('mousedown', () => {
         focusWindow(win);
     });
 });
 
-// También lo añadimos a tus funciones de abrir ventana para que aparezcan delante al abrirse
 const originalOpenWindow = open_window;
 open_window = function(open, point, appName) {
     originalOpenWindow(open, point, appName);
     focusWindow(open);
 };
-
-/**************************************************************
- * WINDOW SNAPPING (LADO IZQUIERDO Y DERECHO)
- **************************************************************/
-let snapPreview = document.createElement('div');
-snapPreview.id = 'snap-preview';
-document.body.appendChild(snapPreview);
-
-let snapTimeout;
-let currentSnapSide = null;
-
-function handleSnapping(mouseX, win) {
-    const edgeMargin = 10; // Sensibilidad del borde en píxeles
-    const winElement = $(win)[0]; // Convertir a elemento JS si es jQuery
-
-    // Detectar si el cursor toca el borde izquierdo o derecho
-    if (mouseX <= edgeMargin) {
-        showSnapPreview('left');
-        startSnapTimer('left', winElement);
-    } else if (mouseX >= window.innerWidth - edgeMargin) {
-        showSnapPreview('right');
-        startSnapTimer('right', winElement);
-    } else {
-        hideSnapPreview();
-        clearTimeout(snapTimeout);
-        snapTimeout = null;
-        currentSnapSide = null;
-    }
-}
-
-function showSnapPreview(side) {
-    if (currentSnapSide === side) return;
-    currentSnapSide = side;
-    snapPreview.style.display = 'block';
-    snapPreview.style.left = side === 'left' ? '0' : '50%';
-    snapPreview.style.opacity = '1';
-}
-
-function hideSnapPreview() {
-    snapPreview.style.opacity = '0';
-    setTimeout(() => { if (snapPreview.style.opacity === '0') snapPreview.style.display = 'none'; }, 300);
-}
-
-function startSnapTimer(side, win) {
-    if (snapTimeout) return; // Ya hay un contador en marcha
-
-    snapTimeout = setTimeout(() => {
-        applySnap(win, side);
-        hideSnapPreview();
-    }, 1000); // 1 Segundo de espera
-}
-
-function applySnap(win, side) {
-    // Guardamos el tamaño original antes de encajar (si no estaba ya maximizada/encajada)
-    if (!win.classList.contains('window--maximized') && !win.classList.contains('window--snap-left') && !win.classList.contains('window--snap-right')) {
-        win.dataset.preWidth = win.style.width;
-        win.dataset.preHeight = win.style.height;
-        win.dataset.preTop = win.style.top;
-        win.dataset.preLeft = win.style.left;
-    }
-
-    win.classList.remove('window--snap-left', 'window--snap-right', 'window--maximized');
-    win.classList.add(side === 'left' ? 'window--snap-left' : 'window--snap-right');
-    
-    // Forzamos que ignore límites previos
-    win.style.maxWidth = "none";
-    win.style.minWidth = "none";
-}
 
 /**************************************************************
  * MAGNIFICACIÓN EN EL DOCK (CORREGIDA)
@@ -418,48 +363,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const MAX_SCALE = 1.7; 
   const RANGE = 195;    
   const MAX_LIFT = 15; 
-  
-  // --- CONFIGURACIÓN DE LA ALTERNATIVA (Lerp) ---
-  const smoothness = 0.20; // Entre 0 y 1. (0.1 = muy suave, 0.5 = más rápido)
-  let intensities = Array(dockIcons.length).fill(0); // Estado actual de cada icono
+  const smoothness = 0.20; 
+  let intensities = Array(dockIcons.length).fill(0); 
 
   function update() {
     dockIcons.forEach((icon, index) => {
-      // 1. Obtenemos el objetivo (target) basado en el mouse
       const targetIntensity = icon.dataset.targetIntensity || 0;
-      
-      // 2. INTERPOLACIÓN (La magia): 
-      // El valor actual se acerca al objetivo un poquito en cada frame.
-      // Esto crea una entrada y salida suave de forma natural sin usar CSS.
       intensities[index] += (targetIntensity - intensities[index]) * smoothness;
-
       const intensity = intensities[index];
       const scale = 1 + (MAX_SCALE - 1) * intensity;
       const lift = intensity * MAX_LIFT;
       const margin = intensity * 20;
-
-      // 3. Aplicamos el estilo (Usamos 'none' para que no haya conflicto con CSS)
       icon.style.transition = "none"; 
       icon.style.transform = `translateY(-${lift}px) scale(${scale})`;
       icon.style.margin = `0 ${margin}px`;
     });
-
-    requestAnimationFrame(update); // Ejecuta esto 60 veces por segundo
+    requestAnimationFrame(update); 
   }
-
-  // Iniciamos el bucle de renderizado
   requestAnimationFrame(update);
 
   dock.addEventListener('mousemove', (e) => {
     const mouseX = e.clientX;
-
     dockIcons.forEach(icon => {
       const rect = icon.getBoundingClientRect();
       const iconCenter = rect.left + rect.width / 2;
       const distance = Math.abs(mouseX - iconCenter);
-
       if (distance < RANGE) {
-        // En lugar de aplicar el estilo, solo guardamos el "objetivo"
         const ratio = (RANGE - distance) / RANGE;
         icon.dataset.targetIntensity = ratio;
       } else {
@@ -477,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /**************************************************************
  * macOS Tahoe - Logic + Shake to Find
  **************************************************************/
-let isDragging = false; 
+let isDraggingAbout = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const aboutBtn = document.getElementById('about-link');
@@ -487,16 +416,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (aboutBtn && aboutWin && draggable) {
         aboutBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             aboutWin.style.display = 'block';
             draggable.style.top = "50%";
             draggable.style.left = "50%";
             draggable.style.transform = "translate(-50%, -50%)";
+            focusWindow(aboutWin);
         });
 
         let offsetX, offsetY;
         draggable.addEventListener('mousedown', (e) => {
             if (e.target.closest('button')) return;
-            isDragging = true;
+            isDraggingAbout = true;
             const rect = draggable.getBoundingClientRect();
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
@@ -507,13 +438,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
+            if (!isDraggingAbout) return;
             draggable.style.left = (e.clientX - offsetX) + 'px';
             draggable.style.top = (e.clientY - offsetY) + 'px';
         });
 
         document.addEventListener('mouseup', () => {
-            isDragging = false;
+            isDraggingAbout = false;
             draggable.style.cursor = 'grab';
         });
     }
@@ -536,7 +467,7 @@ document.addEventListener('mousemove', (e) => {
   if (timeDiff > 0) {
     const distance = Math.sqrt(Math.pow(e.pageX - lastMouseX, 2) + Math.pow(e.pageY - lastMouseY, 2));
     const speed = (distance / timeDiff) * 100; 
-    if (speed > 1500 && !isDragging) { 
+    if (speed > 1500 && !isDraggingAbout) { 
       document.body.classList.add('cursor-big');
     }
     clearTimeout(cursorTimeout);
@@ -553,14 +484,22 @@ function closeAbout() {
     if (win) win.style.display = 'none';
 }
 
-// Spotlight
-function handleopen_spotlight() {
-  if (elements.spotlight_search.style.display === "none") {
-    elements.spotlight_search.style.display = "flex";
+// Spotlight unificado
+function handleopen_spotlight(e) {
+  if (e) e.stopPropagation();
+  const isOpen = elements.spotlight_search.classList.contains("opened");
+  closeBatteryPopup();
+  if (controlCenterMenu) controlCenterMenu.classList.remove("opened");
+  if (isOpen) {
+    elements.spotlight_search.classList.remove("opened");
   } else {
-    elements.spotlight_search.style.display = "none";
+    elements.spotlight_search.classList.add("opened");
+    const input = elements.spotlight_search.querySelector("input");
+    if (input) setTimeout(() => input.focus(), 50);
   }
 }
+
+elements.spotlight_search.addEventListener("click", (e) => e.stopPropagation());
 
 // Notes app logic
 function handleAdding() {
@@ -586,28 +525,31 @@ function handleMinimize(Minimize) {
 function close_window(close, point, appName) {
   close.style.display = "none";
   point.style.display = "none";
-  appName.style.display = "none";
+  if(appName) appName.style.display = "none";
 }
 
 function open_window(open, point, appName) {
   elements.navbar.style.display = "flex";
-  open.style.display = "block";
+  open.style.display = "flex";
   launchpad.container.style.display = "flex";
   launchpad.window.style.display = "none";
   launchpad.point.style.display = "none";
-  appName.style.display = "block";
+  if(appName) appName.style.display = "block";
   point.style.display = "block";
+  focusWindow(open);
 }
 
 // Event Listeners Apps
 safariApp.opening.addEventListener("click", () => open_window(safariApp.window, safariApp.point, safariApp.app_name));
 safariApp.close.addEventListener("click", () => close_window(safariApp.window, safariApp.point, safariApp.app_name));
-
 settingsApp.opening.addEventListener("click", () => open_window(settingsApp.window, settingsApp.point, settingsApp.app_name));
 settingsApp.close.addEventListener("click", () => close_window(settingsApp.window, settingsApp.point, settingsApp.app_name));
-
 musicApp.opening.addEventListener("click", () => open_window(musicApp.window, musicApp.point, musicApp.app_name));
 musicApp.close.addEventListener("click", () => close_window(musicApp.window, musicApp.point, musicApp.app_name));
+
+// APP STORE LISTENERS (CORREGIDO)
+appStoreApp.opening.addEventListener("click", () => open_window(appStoreApp.window, appStoreApp.point, appStoreApp.app_name));
+appStoreApp.close.addEventListener("click", () => close_window(appStoreApp.window, appStoreApp.point, appStoreApp.app_name));
 
 // Launchpad logic
 launchpad.opening.addEventListener("click", handleOpenLaunching);
@@ -651,7 +593,7 @@ function handleOpenCal_lunchpad() {
     launchpad.container.style.display = "flex";
     elements.navbar.style.display = "flex";
     calculatorApp.point.style.display = "block";
-    centerWindow(calculatorApp.window); // <--- AÑADIR ESTO
+    centerWindow(calculatorApp.window);
   }, 300);
 }
 
@@ -666,14 +608,16 @@ terminalApp.opening.addEventListener("click", () => open_window(terminalApp.wind
 notesApp.opening.addEventListener("click", () => open_window(notesApp.window, notesApp.point, notesApp.app_name));
 calculatorApp.opening.addEventListener("click", () => {
   open_window(calculatorApp.window, calculatorApp.point, calculatorApp.app_name);
-  centerWindow(calculatorApp.window); // <--- AÑADIR ESTO
+  centerWindow(calculatorApp.window);
 });
 mapsApp.opening.addEventListener("click", () => open_window(mapsApp.window, mapsApp.point, mapsApp.app_name));
 calculatorApp.close.addEventListener("click", () => close_window(calculatorApp.window, calculatorApp.point, calculatorApp.app_name));
 calculatorApp.opening_l.addEventListener("click", handleOpenCal_lunchpad);
-elements.open_spotlight.addEventListener("click", handleopen_spotlight);
 launchpad.searchbox.addEventListener("input", handleLaunchpadSearch);
-elements.clockWrapper.addEventListener("click", () => elements.widgetsPanel.classList.toggle("open"));
+elements.clockWrapper.addEventListener("click", (e) => {
+    e.stopPropagation();
+    elements.widgetsPanel.classList.toggle("open");
+});
 
 // Calculator Logic
 const calculatorButtons = document.querySelectorAll(".input button");
@@ -727,84 +671,44 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-
-let snapTimeout;
-let snapPreview = document.createElement('div');
-snapPreview.id = 'snap-preview';
-document.body.appendChild(snapPreview);
-
-function handleSnapping(mouseX, win) {
-    const margin = 10; // Sensibilidad del borde
-    if (mouseX < margin) {
-        showPreview('left');
-        if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(win, 'left'), 1000);
-    } else if (mouseX > window.innerWidth - margin) {
-        showPreview('right');
-        if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(win, 'right'), 1000);
-    } else {
-        hidePreview();
-    }
-}
-
-function showPreview(side) {
-    snapPreview.style.display = 'block';
-    snapPreview.style.left = side === 'left' ? '0' : '50%';
-    setTimeout(() => snapPreview.style.opacity = '1', 10);
-}
-
-function hidePreview() {
-    snapPreview.style.opacity = '0';
-    clearTimeout(snapTimeout);
-    snapTimeout = null;
-}
-
-function applySnap(win, side) {
-    $(win).addClass(side === 'left' ? 'window--snap-left' : 'window--snap-right')
-          .removeClass('window--maximized');
-    hidePreview();
-}
-
-
+/**************************************************************
+ * SNAPPING LOGIC (CON FIX DE SOLTADO)
+ **************************************************************/
 if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
-    let snapTimeout;
     const snapPreview = document.createElement('div');
     snapPreview.id = 'snap-preview';
     document.body.appendChild(snapPreview);
 
-    const applySnap = (win, side) => {
-        // 1. QUITAMOS el bloqueo de animación para que la ventana "vuele" a su sitio
-        $(win).removeClass('is-dragging');
+    let activeSnapSide = null; 
 
-        // 2. Guardamos posición previa si no estaba maximizada
-        if (!win.classList.contains('window--maximized') && !$(win).hasClass('window--snap-left')) {
+    const applySnap = (win, side) => {
+        $(win).removeClass('is-dragging');
+        if (!win.classList.contains('window--maximized') && !$(win).hasClass('window--snap-left') && !$(win).hasClass('window--snap-right')) {
             win.dataset.preTop = win.style.top;
             win.dataset.preLeft = win.style.left;
             win.dataset.preWidth = win.style.width;
             win.dataset.preHeight = win.style.height;
         }
-
         $(win).removeClass('window--snap-left window--snap-right window--maximized');
-
-        // 3. Aplicamos la posición final (el CSS hará la transición suave)
+        
         if (side === 'top') {
             $(win).addClass('window--maximized');
             Object.assign(win.style, { top: "30px", left: "0px", width: "100vw", height: "calc(100vh - 115px)" });
         } else if (side === 'left') {
             $(win).addClass('window--snap-left');
             Object.assign(win.style, { top: "30px", left: "0px", width: "50vw", height: "calc(100vh - 115px)" });
-        } else {
+        } else if (side === 'right') {
             $(win).addClass('window--snap-right');
             Object.assign(win.style, { top: "30px", left: "50vw", width: "50vw", height: "calc(100vh - 115px)" });
         }
-        
         snapPreview.style.opacity = '0';
+        activeSnapSide = null;
     };
 
-const baseConfig = {
-        // ELIMINAMOS containment para que la ventana sea libre
+    const baseConfig = {
         start: function(event, ui) { 
             $(this).addClass('is-dragging');
-            
+            activeSnapSide = null;
             if ($(this).hasClass('window--maximized') || $(this).hasClass('window--snap-left') || $(this).hasClass('window--snap-right')) {
                 const oldWidth = parseInt(this.dataset.preWidth) || 900;
                 $(this).removeClass('window--snap-left window--snap-right window--maximized');
@@ -814,36 +718,37 @@ const baseConfig = {
             }
         },
         drag: function(event, ui) { 
-            // SOLO BLOQUEAMOS EL BORDE SUPERIOR (Navbar 30px)
             if (ui.position.top < 30) ui.position.top = 30;
-
-            // La detección de Snap sigue funcionando igual
             const margin = 15;
+            
             if (event.pageY < 40) { 
+                activeSnapSide = 'top';
                 snapPreview.style.display = 'block'; snapPreview.style.left = '0'; snapPreview.style.width = '100%';
                 setTimeout(() => snapPreview.style.opacity = '1', 10);
-                if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(this, 'top'), 1000);
             } else if (event.pageX < margin) { 
+                activeSnapSide = 'left';
                 snapPreview.style.display = 'block'; snapPreview.style.left = '0'; snapPreview.style.width = '50%';
                 setTimeout(() => snapPreview.style.opacity = '1', 10);
-                if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(this, 'left'), 1000);
             } else if (event.pageX > window.innerWidth - margin) { 
+                activeSnapSide = 'right';
                 snapPreview.style.display = 'block'; snapPreview.style.left = '50%'; snapPreview.style.width = '50%';
                 setTimeout(() => snapPreview.style.opacity = '1', 10);
-                if (!snapTimeout) snapTimeout = setTimeout(() => applySnap(this, 'right'), 1000);
             } else {
+                activeSnapSide = null;
                 snapPreview.style.opacity = '0';
-                clearTimeout(snapTimeout); snapTimeout = null;
             }
         },
         stop: function() { 
             $(this).removeClass('is-dragging');
+            if (activeSnapSide) {
+                applySnap(this, activeSnapSide);
+            }
             snapPreview.style.opacity = '0';
-            clearTimeout(snapTimeout); snapTimeout = null;
+            activeSnapSide = null;
         }
     };
 
-    $(".terminal, .note, .maps, .safari, .music").draggable({ ...baseConfig, handle: ".window__taskbar" });
+    $(".terminal, .note, .maps, .safari, .music, .appstore").draggable({ ...baseConfig, handle: ".window__taskbar" });
     $(".calculator").draggable({ ...baseConfig, handle: ".calculator__top" });
     $(".settings-app").draggable({ ...baseConfig, handle: ".settings_window__taskbar" });
 }
@@ -851,18 +756,18 @@ const baseConfig = {
 
 // Date Time
 const dateElement = document.getElementById("date");
-dateElement.innerHTML = new Date().toDateString();
+if(dateElement) dateElement.innerHTML = new Date().toDateString();
 function digi() {
   const date = new Date();
   let hour = date.getHours();
   let minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
   let ampm = hour >= 12 ? " PM" : " AM";
   hour = hour % 12 || 12;
-  elements.clockElement.innerHTML = (hour < 10 ? "0"+hour : hour) + ":" + minute + ampm;
+  if(elements.clockElement) elements.clockElement.innerHTML = (hour < 10 ? "0"+hour : hour) + ":" + minute + ampm;
 }
 
 // Terminal line
-let terminal_line_html = document.querySelector(".terminal_line").outerHTML;
+let terminal_line_html = document.querySelector(".terminal_line") ? document.querySelector(".terminal_line").outerHTML : "";
 let path = "~";
 let dirs = ["Desktop", "Downloads", "Music", "Documents"];
 function init_terminal_line() {
@@ -884,8 +789,9 @@ function init_terminal_line() {
   });
 }
 init_terminal_line();
-terminalApp.content.addEventListener("click", () => placeCaretAtEnd(document.querySelector(".cursor")));
+if(terminalApp.content) terminalApp.content.addEventListener("click", () => placeCaretAtEnd(document.querySelector(".cursor")));
 function placeCaretAtEnd(el) {
+  if(!el) return;
   el.focus();
   var range = document.createRange(); range.selectNodeContents(el);
   range.collapse(false);
@@ -893,7 +799,6 @@ function placeCaretAtEnd(el) {
 }
 
 // Context Menu
-document.onclick = () => document.getElementById("contextMenu").style.opacity = "0";
 document.oncontextmenu = (e) => {
   e.preventDefault();
   var menu = document.getElementById("contextMenu");
@@ -904,12 +809,14 @@ document.oncontextmenu = (e) => {
 
 // Battery and Spotlight Control
 const calculateBattery = () => {
-  navigator.getBattery().then(battery => {
-    let number = Math.floor(battery.level * 100);
-    elements.batteryText.textContent = `${number}%`;
-    elements.batteryProgress.style.width = `${number}%`;
-    elements.batteryPopupText.textContent = `${number}%`;
-  });
+  if(navigator.getBattery) {
+      navigator.getBattery().then(battery => {
+        let number = Math.floor(battery.level * 100);
+        elements.batteryText.textContent = `${number}%`;
+        elements.batteryProgress.style.width = `${number}%`;
+        elements.batteryPopupText.textContent = `${number}%`;
+      });
+  }
 };
 
 const closeBatteryPopup = () => {
@@ -919,43 +826,38 @@ const closeBatteryPopup = () => {
 
 elements.batteryButton.addEventListener("click", (e) => {
   e.stopPropagation(); 
+  if(controlCenterMenu) controlCenterMenu.classList.remove("opened");
+  elements.spotlight_search.classList.remove("opened");
+
   elements.batteryPopup.classList.toggle("opened");
   elements.batteryButton.classList.toggle("selected");
 });
 
-elements.batteryPopup.addEventListener("click", (e) => e.stopPropagation());
+const controlCenterBtn = document.querySelector(".control-center");
+const controlCenterMenu = document.querySelector(".menu__container");
+
+if(controlCenterBtn) {
+    controlCenterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeBatteryPopup();
+      elements.spotlight_search.classList.remove("opened");
+      controlCenterMenu.classList.toggle("opened");
+    });
+}
+
+if(controlCenterMenu) controlCenterMenu.addEventListener("click", (e) => e.stopPropagation());
+
+elements.open_spotlight.addEventListener("click", handleopen_spotlight);
 
 document.addEventListener("click", () => {
   closeBatteryPopup();
-  controlCenterMenu.classList.remove("opened");
+  if(controlCenterMenu) controlCenterMenu.classList.remove("opened");
+  elements.spotlight_search.classList.remove("opened");
+  elements.widgetsPanel.classList.remove("open");
+  
+  const ctxMenu = document.getElementById("contextMenu");
+  if(ctxMenu) ctxMenu.style.opacity = "0";
 });
-
-const controlCenterBtn = document.querySelector(".control-center");
-const controlCenterMenu = document.querySelector(".menu__container");
-controlCenterBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  closeBatteryPopup();
-  controlCenterMenu.classList.toggle("opened");
-});
-controlCenterMenu.addEventListener("click", (e) => e.stopPropagation());
-
-elements.open_spotlight.onclick = (e) => {
-    e.stopImmediatePropagation();
-    e.preventDefault();
-    const isOpen = elements.spotlight_search.classList.contains("opened");
-    if (isOpen) {
-        elements.spotlight_search.classList.remove("opened");
-    } else {
-        closeBatteryPopup();
-        controlCenterMenu.classList.remove("opened");
-        elements.spotlight_search.classList.add("opened");
-        const input = elements.spotlight_search.querySelector("input");
-        if (input) setTimeout(() => input.focus(), 50);
-    }
-};
-
-elements.spotlight_search.onclick = (e) => e.stopImmediatePropagation();
-document.addEventListener("click", () => elements.spotlight_search.classList.remove("opened"), true);
 
 calculateBattery();
 digi();
