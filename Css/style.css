@@ -589,7 +589,7 @@ display: flex;
 align-items: center;
 position: fixed;
 padding: 0.2rem 0.4rem 0px;
-bottom: 1.5%;
+bottom: 1%;
 left: 50%;
 height: 63px;
 transform: translateX(-50%);
