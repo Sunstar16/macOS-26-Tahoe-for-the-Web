@@ -599,7 +599,9 @@ position: relative;
 display: flex;
 flex-direction: column;
 gap: 6px;
-background: url("../background/ccslider.png") 0% 0% / contain rgba(255, 255, 255, 0.4);
+/* background: url("../background/ccslider.png") 0% 0% / contain rgba(255, 255, 255, 0.4); */
+background: rgba(255, 255, 255, 0.5);
+box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
 backdrop-filter: blur(calc(20px));
 border-radius: 28px;
 height: 63px;
@@ -607,7 +609,6 @@ padding-top: 10px;
 left: -12px;
 top: -45px;
 }
-
 .cc-slider-label {
  font-size: 11px;
  font-weight: 700;
