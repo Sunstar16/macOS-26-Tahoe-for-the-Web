@@ -739,7 +739,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .dock .point {
   position: absolute;
-  margin-bottom: -60px;
+  margin-bottom: -57px;
   width: 5px;
   height: 5px;
   margin-top: -6px;
