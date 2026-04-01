@@ -722,7 +722,7 @@ height: 63px;
 transform: translateX(-50%);
 backdrop-filter: url("#glass-distortion") blur(4px);
 -webkit-backdrop-filter: blur(4px);
-border: 1px solid rgba(255, 255, 255, 0.18);
+border-bottom: 0.1px solid rgba(255, 255, 255, 0.28);
 border-radius: 1.3rem;
 z-index: 99998 !important;
 box-shadow: rgba(255, 255, 255, 0.3) 0.75px 0.75px 0.75px 0px inset, rgba(0, 0, 0, 0.13) -1px -1px 1px 1px inset;
