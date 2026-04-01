@@ -2385,7 +2385,7 @@ top: 38px;
     height: 16px;
 }
 
-.calculator, .note, .terminal, .maps, .safari, .settings-app, .music, #about-window {
+.calculator, .note, .terminal, .maps, .safari, .settings-app, .appstore, .music, #about-window {
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important; /* Curva tipo Apple */
 }
 
