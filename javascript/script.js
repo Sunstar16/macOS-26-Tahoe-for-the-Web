@@ -681,13 +681,14 @@ if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
     let activeSnapSide = null; 
 
     const applySnap = (win, side) => {
-        $(win).removeClass('is-dragging');
+        // CORRECCIÓN 1: Capturamos el ancho real computado (1000px) no el del atributo style que está vacío
         if (!win.classList.contains('window--maximized') && !$(win).hasClass('window--snap-left') && !$(win).hasClass('window--snap-right')) {
             win.dataset.preTop = win.style.top;
             win.dataset.preLeft = win.style.left;
-            win.dataset.preWidth = win.style.width;
-            win.dataset.preHeight = win.style.height;
+            win.dataset.preWidth = $(win).outerWidth() + "px"; 
+            win.dataset.preHeight = $(win).outerHeight() + "px";
         }
+
         $(win).removeClass('window--snap-left window--snap-right window--maximized');
         
         if (side === 'top') {
@@ -700,6 +701,10 @@ if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
             $(win).addClass('window--snap-right');
             Object.assign(win.style, { top: "30px", left: "50vw", width: "50vw", height: "calc(100vh - 115px)" });
         }
+
+        // CORRECCIÓN 2: Quitamos la clase de dragging AL FINAL para que la ventana se anime "colocándose" en su sitio
+        $(win).removeClass('is-dragging');
+
         snapPreview.style.opacity = '0';
         activeSnapSide = null;
     };
@@ -709,11 +714,17 @@ if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
             $(this).addClass('is-dragging');
             activeSnapSide = null;
             if ($(this).hasClass('window--maximized') || $(this).hasClass('window--snap-left') || $(this).hasClass('window--snap-right')) {
-                const oldWidth = parseInt(this.dataset.preWidth) || 900;
+                // CORRECCIÓN 3: Si no hay preWidth, usamos el ancho actual del elemento para que no salte a 900
+                const oldWidth = parseInt(this.dataset.preWidth) || $(this).outerWidth();
+                const oldHeight = this.dataset.preHeight || $(this).outerHeight();
+
                 $(this).removeClass('window--snap-left window--snap-right window--maximized');
                 this.style.width = oldWidth + "px";
-                this.style.height = (this.dataset.preHeight || "550px");
+                this.style.height = oldHeight;
+
+                // Fix Teleport: Sincronizamos la posición del mouse
                 ui.position.left = event.pageX - (oldWidth / 2);
+                ui.offset.left = event.pageX - (oldWidth / 2);
             }
         },
         drag: function(event, ui) { 
@@ -738,9 +749,11 @@ if (typeof $ === 'function' && typeof $.fn.draggable === 'function') {
             }
         },
         stop: function() { 
-            $(this).removeClass('is-dragging');
+            // CORRECCIÓN 4: Solo quitamos la clase si NO hay snap. Si lo hay, applySnap lo hará después de mover la ventana.
             if (activeSnapSide) {
                 applySnap(this, activeSnapSide);
+            } else {
+                $(this).removeClass('is-dragging');
             }
             snapPreview.style.opacity = '0';
             activeSnapSide = null;
