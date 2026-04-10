@@ -39,31 +39,14 @@ input {
   -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  overflow: hidden;
-  height: 100%;
-}
-
-
 body {
-  width: 100vw;
   height: 100vh;
-  position: fixed;
-  margin: 0;
   user-select: none;
   font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
   background: url("../background/iridescence.jpg") center/cover no-repeat;
   overflow: hidden;
-  cursor: url('../cursor/normal-select.png'), auto !important;
-}
-
-.container__Window {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
+  /* Cambio mínimo: Ruta relativa a tu archivo PNG */
+  cursor: url('../cursor/normal-select.png'), auto;
 }
 
 /* Nueva clase para el efecto de cursor grande de macOS Tahoe */
@@ -92,7 +75,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 99999 !important;
+  z-index: 20;
   animation: top-to-bottom 0.3s;
 }
 
@@ -254,18 +237,16 @@ li.app_name {
   -webkit-backdrop-filter: blur(60px);
   backdrop-filter: blur(60px);
   border-radius: 8px;
-  pointer-events: none;
 }
 
 .navbar__right .battery__popup.opened {
   opacity: 1;
-  border-radius: 18px;
-  background: var(--color-white-400);
-  border: 1px solid var(--color-white-200);
-  backdrop-filter: blur(5px);
-  box-shadow: none;
-  text-shadow: none;
-  pointer-events: auto;
+border-radius: 18px;
+background: var(--color-white-400);
+border: 1px solid var(--color-white-200);
+backdrop-filter: blur(5px);
+box-shadow: none;
+text-shadow: none;
 }
 
 .navbar__right .battery__popup header {
@@ -391,345 +372,208 @@ li > ul > li > button:active {
   background-color: #0063f7;
 }
 
-/* ==========================================================================
-   MACOS TAHOE / IOS 18 CONTROL CENTER DESIGN
-   ========================================================================== */
-
 li > .menu__container {
-  display: block !important;
+  display: none;
   position: absolute;
-  width: 330px;
-  top: calc(100% + 10px);
-  right: -600%; /* Adjusted so it looks centered on the icon */
-  border-radius: 36px;
-  padding: 18px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  transform: translateY(-10px);
+  width: 380px;
+  border-radius: 0px;
+  top: 100%;
+  right: 50%;
+  height: 24rem;
+  transform: translateX(50%);
+  overflow: hidden;
+  padding: 15px;
 }
 
-li > .menu__container.opened {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
+li:hover .menu__container {
+  display: flex;
 }
 
-.cc-grid {
+li > .menu__container > .grid__controling {
+  width: 100%;
+  height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-areas:
+    "Toggles Toggles DoNotDisturb DoNotDisturb"
+    "Toggles Toggles KeyboardBrightness Battery"
+    "Display Display Display Display"
+    "Audio Audio Audio Audio"
+    "Music Music Music Music";
+  grid-gap: 1em 1em;
+}
+li > .menu__container > .grid__controling .control_center--grid {
+  display: grid;
+  border: 1px solid rgba(255, 255, 255, 0.178);
+  overflow: hidden;
+  border-radius: 32px;
+  backdrop-filter: url(#glass-distortion) blur(4px);
+  -webkit-backdrop-filter: blur(4px); 
+  box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.05), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.05);
+}
+.menu__container > .grid__controling .col-5 {
+  grid-area: Toggles;
+}
+.menu__container > .grid__controling .col-7 {
+  grid-area: DoNotDisturb;
 }
 
-.cc-stack-left { display: flex; flex-direction: column; gap: 14px; }
-
-.cc-row {
-    scale: 107%;
-    position: relative;
-    display: flex;
-    gap: 23px;
-    left: 3px;
-    top: 4px;
+.menu__container > .grid__controling .col-3--brightness {
+  grid-area: KeyboardBrightness;
+}
+.menu__container > .grid__controling .col-3--battery {
+  grid-area: Battery;
 }
 
-/* Control Tiles */
-.cc-tile {
-  padding: 12px;
+.menu__container > .grid__controling .col-12--light {
+  grid-area: Display;
+}
+.menu__container > .grid__controling .col-12--volume {
+  grid-area: Audio;
+}
+.menu__container > .grid__controling .col-12--music {
+  grid-area: Music;
+}
+
+.grid__controling .control_center--grid button {
   display: flex;
   align-items: center;
-  transition: background 0.2s;
+  justify-content: flex-start;
+  width: 100%;
+  font-size: 20px;
+  transition: all 120ms ease-in-out;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+  cursor: url(../cursor/Link.cur), pointer;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+.sound,
+.brightness {
+  position: relative;
 }
 
-
-.cc-wifi-tile {
- background: rgba(255, 255, 255, 0.5);
- backdrop-filter: blur(20px);
- box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
- gap: 12px;
- width: 144px;
- box-sizing: border-box; 
- border-radius: 25px;
- margin-left: -8px;
-}
-
-
-.cc-focus-pill {
-position: relative;
-top: 10px;
-width: 144px;
-left: 2px;
-gap: 12px;
-box-sizing: border-box;
-background: 0px center / 99.9% 100% rgba(255, 255, 255, 0.5);
-backdrop-filter: blur(calc(20px));
- box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
-margin-left: -10px;
-height: 52px !important;
-border-radius: 25px !important;
-}
-
-.cc-button-circle {
-  width: 50px;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(calc(20px));
- box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #1d1d1f;
-}
-
-.cc-icon-circle {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cc-icon-circle.blue { 
-    background: white;
-    color: #007AFF;
-
-}
-
-
-.cc-icon-circle .material-icons-round {
- font-size: 18px; 
-}
-
-.cc-text {
- display: flex;
- flex-direction: column;
- line-height: 1.1; 
-}
-
-.cc-title {
- font-size: 13.5px;
- font-weight: 600;
- color: #1d1d1f; 
-}
-
-.cc-sub {
-position: relative;
-font-size: 8px;
-color: rgba(29, 29, 31, 0.6);
-/* justify-content: center !important; */
-bottom: -13px !important;
-left: -48px;
-}
-
-.cc-sub-1 {
-    position: relative;
-    font-size: 10px;
-    color: rgba(29, 29, 31, 0.6);
-    /* justify-content: center !important; */
-    bottom: 0px !important;
-}
-
-/* Tall Music Widget */
-.cc-music-widget {
-position: relative;
-scale: 1px !important;
-background: rgba(255, 255, 255, 0.5);
-backdrop-filter: blur(calc(20px));
- box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
-background-size: 145px 142.5px;
-background-position-x: 0.5px;
-background-position-y: 0.8px;
-grid-column: 2;
-height: 114px;
-flex-direction: column;
-justify-content: center;
-text-align: center;
-top: -1px !important;
-left: -16px;
-border-radius: 30px !important;
-width: 122px;
-}
-
-.cc-stack-right {
-position: relative;
-display: grid;
-top: -54px;
-left: 165px !important;
-grid-template-columns: 0.9fr 1fr !important;
-}
-
-
-.cc-music-img {
-    position: relative;
-    opacity: 0.8;
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
-    left: -32px;
-    top: 5px;
-}
-
-.cc-music-controls {
- display: flex;
- gap: 12px;
- margin-top: 12px; 
-}
-
-.cc-music-controls .material-icons-round {
- font-size: 24px;
- color: #1d1d1f;
- cursor: pointer; 
-}
-
-/* Sliders with Thick White Fill */
-.cc-sliders-container {
-  grid-column: 1 / span 2;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.cc-slider-group {
-position: relative;
-display: flex;
-flex-direction: column;
-gap: 6px;
-/* background: url("../background/ccslider.png") 0% 0% / contain rgba(255, 255, 255, 0.4); */
-background: rgba(255, 255, 255, 0.5);
-box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(calc(20px));
-border-radius: 28px;
-height: 63px;
-padding-top: 10px;
-left: -12px;
-top: -45px;
-}
-.cc-slider-label {
- font-size: 11px;
- font-weight: 700;
- margin-left: 14px;
- color: rgba(0,0,0,0.7); 
-}
-
-.cc-slider-pill {
-    position: relative;
-    height: 32px;
-    width: 290px;
-    left: 9px;
-    background: rgba(255, 255, 255, 0.28);
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    overflow: hidden;
-}
-
-.cc-slider-pill input[type="range"] {
--webkit-appearance: none;
-    position: relative;
-    width: 100%;
-    left: 5% !important;
-    background: transparent;
-    z-index: 2;
-    height: 100%;
-}
-
-.cc-slider-pill input[type="range"]::-webkit-slider-thumb {
+.menu__container > .grid__controling input[type="range"] {
   -webkit-appearance: none;
-  width: 0px; 
-  height: 32px;
-  /* This creates the heavy white fill seen in the image */
-  box-shadow: -400px 0 0 400px rgba(255, 255, 255, 0.95);
+  outline: 0;
+  border: 0;
+}
+.sound img {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translatey(-50%);
+}
+.brightness img {
+  /* z-index: -1; */
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translatey(-50%);
+}
+.menu__container > .grid__controling input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 2rem;
+  width: 2rem;
+  background-color: var(--color-white);
+  box-shadow: -2px 0px 3px -2px #5f6063, -340px 0 0 320px #ffffff;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.226);
   cursor: pointer;
 }
 
-.cc-slider-icon-left, .cc-slider-icon-right {
-  position: absolute;
-  font-size: 15px;
-  color: rgba(29, 29, 31, 0.45);
-  z-index: 1;
+.grid__controling input[type="range"]::-webkit-slider-runnable-track {
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.404);
+  border-radius: 50px;
+  overflow: hidden;
 }
 
-.cc-slider-icon-left { 
-    left: 14px; 
-    opacity: 0;
-    pointer-events: none;
+.grid__controling .control_center--grid button p {
+  display: block;
+  font-size: 14px;
+  font-family: "Lexend", sans-serif, 'AppleColorEmojiLocal';
+}
+.nobtn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.nobtn svg {
+  background-color: transparent !important;
 }
 
-.cc-slider-icon-right { 
-    right: 14px; 
-    z-index: 10;
-    pointer-events: none;
-}
-
-/* Utilities Grid Bottom */
-.cc-bottom-row {
-position: relative;
-grid-column: 1 / span 2;
-display: flex;
-justify-content: space-between;
-left: -3.5%;
-top: -45px;
-}
-
-.cc-button-circle-small {
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(calc(20px));
- box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
+.grid__controling .control_center--grid button svg {
+  background-color: var(--color-blue-800);
+  padding: 5px;
   border-radius: 50%;
+  margin: 0 5px;
+}
+.col-7 button svg {
+  background-color: #5E5CDD !important;
+}
+.col-7 button:focus {
+  background: #5E5CDD !important;
+  color: var(--color-white);
+}
+
+.grid__controling .control_center--grid button:focus {
+  background: var(--color-blue-800);
+  color: var(--color-white);
+}
+
+.grid__controling .control_center--grid .musicPlayer {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #1d1d1f;
+  justify-content: space-between;
+}
+.musicPlayer--image {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.musicPlayer--image img {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+.musicPlayer--content {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.musicPlayer--content span {
+  font-size: 40px;
 }
 
-.cc-footer {
-grid-column-start: 1;
-grid-column-end: span 2;
-display: flex;
-justify-content: center;
-margin-top: -45px;
-}
-
-.cc-edit-btn {
-height: 26px;
-padding: 6px 20px;
-border-radius: 50px;
-font-size: 11.5px;
-font-weight: 700;
-color: rgb(29, 29, 31);
-cursor: pointer;
-background: rgba(255, 255, 255, 0.35);
-backdrop-filter: blur(20px);
- box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
+@media screen and (max-width: 600px) {
+  .navbar__right .clock #clock {
+    margin-left: 0;
+  }
 }
 
 .dock {
-display: flex;
-align-items: center;
-position: fixed;
-padding: 0.2rem 0.4rem 0px;
-bottom: 1%;
-left: 50%;
-height: 63px;
-transform: translateX(-50%);
-backdrop-filter: url("#glass-distortion") blur(4px);
--webkit-backdrop-filter: blur(4px);
-border-bottom: 0.1px solid rgba(255, 255, 255, 0.28);
-border-radius: 1.3rem;
-z-index: 99998 !important;
-box-shadow: rgba(255, 255, 255, 0.3) 0.75px 0.75px 0.75px 0px inset, rgba(0, 0, 0, 0.13) -1px -1px 1px 1px inset;
-background: rgba(255, 255, 255, 0.15);
-cursor: url("../cursor/normal-select.png"), auto !important;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  padding: 0.2rem 0.5rem 0 0.5rem;
+  bottom: 1%;
+  left: 50%;
+  height: 64px;
+  transform: translateX(-50%);
+  backdrop-filter: url(#glass-distortion) blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 22px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.05), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.05);
 }
-
 
 @media screen and (max-width: 900px) {
   .dock {
@@ -739,7 +583,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .dock .point {
   position: absolute;
-  margin-bottom: -57px;
+  margin-bottom: -60px;
   width: 5px;
   height: 5px;
   margin-top: -6px;
@@ -764,7 +608,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 }
 
 .dock .column {
-  width: 0.06rem;
+  width: 0.08rem;
   height: 50px;
   margin: 0 4px;
   background: rgba(0, 0, 0, 0.6);
@@ -772,7 +616,6 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .dock .icon {
   position: relative;
-  cursor: url('../cursor/normal-select.png'), auto !important;
   display: grid;
   place-items: center;
   background: none;
@@ -785,11 +628,24 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .dock .icon img {
   width: 3.6rem;
-  margin-bottom: 7px !important;
-  transform-origin: bottom center; /* Crece hacia arriba */
-  display: block;
+  transition: 0.2s;
+  transform: translateY(-2.5px);
 }
 
+.dock .icon:hover img {
+  margin: 0 0 40px 0;
+  width: 7.1rem;
+}
+
+.dock .icon:hover + * img {
+  width: 5.6rem;
+  margin: 0 0 25px 0;
+}
+
+.dock .icon:has(+ *:hover) img {
+  width: 5.6rem;
+  margin: 0 0 25px 0;
+}
 
 .dock .icon img:active {
 
@@ -803,15 +659,16 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .container__Window {
   width: 100%;
-  height: 100%;
+  height: 90%;
   justify-content: space-around;
   align-items: center;
   display: none;
 }
 
 .window {
-  position: absolute !important;
   display: none;
+  min-width: 50%;
+  max-width: 80%;
   height: 430px;
   overflow: hidden;
   border-radius: 1rem;
@@ -824,7 +681,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 }
 
 .window__taskbar {
-  height: 35px;
+  height: 6%;
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
@@ -857,7 +714,6 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 .window__taskbar--actions button:nth-child(1) {
   background-color: #ff5f56;
   box-shadow: 0 0 0 0.5px #e0443e;
-  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 .window__taskbar--actions button::after {
@@ -878,7 +734,6 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 .window__taskbar--actions button:nth-child(2) {
   background-color: #ffbd2e;
   box-shadow: 0 0 0 0.5px #dea123;
-  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 .window__taskbar--actions button:nth-child(2)::after {
@@ -892,7 +747,6 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 .window__taskbar--actions button:nth-child(3) {
   background-color: #27c93f;
   box-shadow: 0 0 0 0.5px #1aab29;
-  cursor: url('../cursor/normal-select.png'), auto !important;
 }
 
 .window__taskbar--actions button:nth-child(3)::after {
@@ -920,21 +774,20 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 .terminal .window__taskbar,
 .Vscode .window__taskbar,
 .maps .window__taskbar {
-  height: 35px;
+  height: 9%;
 }
 
-.terminal .window__taskbar--content h2 {
-    color: var(--color-black);
-    font-size: 18px;
-    font-weight: 100;
+.terminal .window__taskbar {
+  height: 9%;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .terminal_content {
   width: 100%;
-  height: 100%;
+  height: 91%;
   overflow-y: scroll;
   padding-left: 1rem;
-  background-color: rgba(42, 46, 56, 0.9);
+  background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(12px);
   color: rgb(235, 235, 235);
   font-size: 20px;
@@ -997,7 +850,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .window .content {
   width: 100%;
-  height: 100%;
+  height: 92%;
   display: flex;
 }
 
@@ -1033,7 +886,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 .content__sidebar--notes {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: scroll;
   background-color: transparent;
 }
 
@@ -1069,23 +922,15 @@ cursor: url("../cursor/normal-select.png"), auto !important;
   top: 30%;
   left: 43%;
   transform: translateX(-50%) translateY(-50%);
-  border: 0.1px solid var(--color-black-600);
+  border: 1px solid var(--color-white-200);
   justify-content: start;
   border-radius: 100px;
-  background: rgba(200, 235, 255, 0.9);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(5px);
-  z-index: 100000 !important;
-  box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  z-index: 11 !important;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
 }
 
-.spotlight_serach.opened {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
 
 
 .spotlight_serach svg {
@@ -1099,7 +944,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
   font-family: Lexend, 'AppleColorEmojiLocal';
   margin-left: 10px;
   padding-right: 10px;
-  caret-color: black;
+  caret-color: blue;
 }
 .spotlight_serach input::placeholder {
   color: black;
@@ -1305,13 +1150,10 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 
 .calculator {
   display: none;
-  position: absolute !important; /* Asegura que se pueda mover por coordenadas */
   width: 20rem;
   max-width: 100%;
   height: 25rem;
-  max-height: 100%;
-  margin: 0; 
-  transform: none; 
+  max-height: 80%;
   background: var(--color-black-500);
   backdrop-filter: blur(1rem);
   border-radius: 1rem;
@@ -1514,7 +1356,6 @@ cursor: url("../cursor/normal-select.png"), auto !important;
   border: 1px solid var(--color-white-200);
   border-radius: 16px;
   overflow: hidden;
-  z-index: 99997 !important;
 }
 .widgets-panel.open {
   transform: translateX(0);
@@ -1601,7 +1442,7 @@ cursor: url("../cursor/normal-select.png"), auto !important;
 /* 3. La etiqueta (Bocadillo gris claro) */
 .dock .icon .dock-label {
   position: absolute;
-  bottom: 195%; /* Flota sobre el icono */
+  bottom: 110%; /* Flota sobre el icono */
   left: 50%;
   transform: translateX(-50%) translateY(0);
   
@@ -1661,9 +1502,10 @@ border-bottom-right-radius: 24px;
 border-bottom-left-radius: 24px;
 color: white;
 }
-/* Safari App Window */
+
+/* Safari App Window - Consistencia con macOS Tahoe */
 .safari {
-  position: absolute !important;
+  flex-grow: 1;
   width: 900px;
   height: 550px;
   background-color: var(--app-color-white);
@@ -1672,58 +1514,21 @@ color: white;
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   z-index: 10;
-  display: none; 
-  flex-direction: column; /* Organiza barra arriba y contenido abajo */
-  overflow: hidden !important; 
+  display: none; /* Importante: empieza oculto como Maps */
+  flex-direction: column;
+  overflow: hidden;
 }
-
-/* Barra de tareas superior */
-.safari .window__taskbar {
-  height: 35px;
-  flex-shrink: 0; /* Evita que la barra se aplaste */
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
-  background-color: var(--app-color-white);
-}
-
-/* Contenedor del contenido: Aquí ocurre la magia */
-.safari .content {
-  flex-grow: 1; /* Ocupa todo el alto restante de la ventana */
-  width: 100%;
-  height: 95%;
-  position: relative;
-  overflow: hidden; /* Corta lo que sobresalga del escalado */
-}
-
-/* El Iframe forzado a verse completo */
+/* Ajuste del iframe para que ocupe el espacio restante bajo la taskbar */
 .safari iframe {
-  /* Forzamos un tamaño de pantalla "Escritorio" interno */
-  width: 100%;
-  height: 100%;
-  
-  /* Eliminamos bordes */
-  border: none;
-  display: block;
-
-  /* Redondeado de esquinas inferiores */
+  position: absolute;
+  flex-grow: 1; /* Esto hace que el iframe rellene todo el espacio disponible */
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-
-  /* TRUCO PARA VER TODO: 
-     Si notas que las webs se siguen viendo cortadas, 
-     puedes usar 'zoom' o 'transform: scale', pero lo ideal
-     para un clon de macOS es que el iframe sea responsive. 
-  */
+  display: block;
 }
 
-/* Capa de seguridad para el redimensionado */
-.resizing iframe {
-  pointer-events: none !important;
-}
-
-/* Music App - Ajustado al 95% para evitar cortes por debajo */
 .music {
-  position: absolute !important;
+  flex-grow: 1;
   width: 900px;
   height: 478px;
   background-color: var(--app-color-white);
@@ -1735,34 +1540,18 @@ color: white;
   display: none; 
   flex-direction: column;
   overflow: hidden;
-
 }
 
-.music .window__taskbar {
-  flex: 0 0 35px; /* Altura fija */
-  height: 35px;
-  background-color: var(--app-color-white);
-}
-
-.music .content {
-  flex: 1;
-  display: flex;
-  justify-content: flex-start; /* Alinea el iframe arriba */
-  align-items: flex-start;
-  width: 100%;
-  background-color: #000; /* Fondo negro para que no se vea el hueco del 5% */
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
+/* Music App Iframe - Consistencia total con Safari */
 .music iframe {
-  width: 100%;
-  border: none;
+  position: absolute;
+  flex-grow: 1;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
   display: block;
-  margin: 0;
-  padding: 0;
 }
+
+
 /* Animación de salida: de normal a grande y transparente */
 @keyframes close-opacity {
   0% {
@@ -1968,7 +1757,7 @@ color: white;
     height: 48px;
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(200, 235, 255, 0.98);
+    background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     display: flex;
@@ -1976,11 +1765,13 @@ color: white;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.2), inset -1px -1px 1px 1px rgba(0, 0, 0, 0.1);
-    border: 0.1px solid var(--color-black-600);
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
 }
 
-
+.tahoe-circle-btn:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+}
 
 .tahoe-circle-btn img {
     opacity: 40%;
@@ -1990,546 +1781,51 @@ color: white;
     /* Optional: If your PNGs are black and you want them to look white/grey */
     /* filter: brightness(0) invert(1); */
 }
-
-/* Contenedor principal de la app (Igual que tus reglas de .safari) */
-.settings-app {
-    flex-grow: 1;
-    width: 900px;
-    height: 550px;
-    background-color: var(--app-color-white); /* Mantiene la taskbar blanca */
-    top: 10%;
-    left: 20%;
-    border-radius: 25px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
+/* Estilos para que las ventanas sean redimensionables */
+.ui-resizable-handle {
     position: absolute;
-}
-
-.settings_window__taskbar {
-position: absolute;
-width: 225px;
-top: 15px;
-left: -14px;
-scale: 82%;
-height: 32px;
-display: flex;
-padding: 0 16px;
-border-radius: 22px;
-}
-
-.settings_window__taskbar--actions {
-  display: flex;
-  align-items: center;
-}
-
-.settings_window__taskbar:hover button::after {
-  color: #000;
-}
-
-.settings_window__taskbar--actions button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 0.8rem;
-  height: 0.8rem;
-  padding: 8px;
-  border-radius: 50%;
-  transition: 0.4s;
-}
-
-.settings_window__taskbar--actions button:not(:last-child) {
-  margin-right: 8px;
-}
-
-.settings_window__taskbar--actions button:nth-child(1) {
-  background-color: #ff5f56;
-  box-shadow: 0 0 0 0.5px #e0443e;
-}
-
-.settings_window__taskbar--actions button::after {
-  display: block;
-  font-size: 14px;
-  color: transparent;
-  font-weight: 900;
-}
-
-.settings_window__taskbar--actions button:nth-child(1)::after {
-  content: "×";
-}
-
-.settings_window__taskbar--actions button:nth-child(1):hover {
-  background-color: #fc3c32;
-}
-
-.settings_window__taskbar--actions button:nth-child(2) {
-  background-color: #ffbd2e;
-  box-shadow: 0 0 0 0.5px #dea123;
-}
-
-.settings_window__taskbar--actions button:nth-child(2)::after {
-  content: "−";
-}
-
-.settings_window__taskbar--actions button:nth-child(2):hover {
-  background-color: #ffa600;
-}
-
-.settings_window__taskbar--actions button:nth-child(3) {
-  background-color: #27c93f;
-  box-shadow: 0 0 0 0.5px #1aab29;
-}
-
-.settings_window__taskbar--actions button:nth-child(3)::after {
-  content: "⤡";
-}
-
-.settings_window__taskbar--actions button:nth-child(3):hover {
-  background-color: #12aa29;
-}
-
-.settings_window__taskbar--content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.settings_window__taskbar--content h2 {
-  color: var(--color-black);
-  font-weight: 600;
-  font-size: 18px;
-}
-
-/* Interior de la aplicación (Lo que va debajo de la barra blanca) */
-.settings-layout {
-    display: flex !important;
-    height: 100%; /* El 6% restante es de la .window__taskbar */
-    color: white;
-    /* Redondeamos solo abajo para que coincida con el borde de 12px del padre */
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    overflow: hidden;
-}
-
-.settings-sidebar {
-    width: 182px;
-    background: linear-gradient(135deg, rgba(0, 191, 255, 0.15) -85%, rgba(225, 225, 225, 0.5) 100%) border-box padding-box, linear-gradient(135deg, rgba(0, 191, 255, 0.15) -85%, rgba(225, 225, 225, 0.5) 100%);
-    padding: 18px 15px;
-    background-image: url(../background/sidebar.png);
-    background-size: 133% 106.5%;
-    /* background-position: center; */
-    background-position-x: center;
-    background-position-y: 50%;
-    margin: 0.8% 8px 1%;
-    box-shadow: rgba(0, 0, 0, 0.2) -2px 1px 15px;
-    overflow: hidden;
-    border-radius: 16.5px;
-    background-color: transparent;
-}
-
-.settings-main {
-position: relative;
-flex: 1 1 0%;
-padding: 15px;
-overflow-y: auto;
-color: black;
-}
-
-.s-item {
-    padding: 3px 0px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    margin-bottom: 4px;
-    transition: background 0.2s;
-    color: black;
-}
-
-.s-item.active { 
-    background: #007aff; 
-    color: white;
-}
-
-.s-item:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.s-card {
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.s-search {
-position: relative;
-background-color: rgb(209, 209, 209);
-left: -4px;
-padding-left: 12%;
-/* margin-left: 0%; */
-width: 92%;
-height: 24px;
-border-radius: 50px;
-top: 38px;
-}
-
-.s-search svg {
-    left: 3px;
-    top: -1.5px;
-    scale: 60%;
-    fill: gray;
-    position: absolute;
-    padding-top: 2px;
-}
-
-.s-search input {
-    position: relative;
-    font-size: 12px;
-    top: 1.5px;
-    right: -5px !important;
-}
-
-
-.s-nav {
-    position: relative;
-}
-
-/* User Profile in Sidebar */
-.s-user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    margin-top: 50px; /* Space for search bar */
-    margin-bottom: 15px;
-    margin-left: -12px;
-}
-
-.s-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #ccc;
-}
-
-.s-user-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.s-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1d1d1f;
-}
-
-.s-sub {
-    font-size: 11px;
-    color: #86868b;
-}
-
-/* Category Header in Main View */
-.main-category-header {
-    text-align: center;
-    margin-bottom: 30px;
-    padding: 0 40px;
-}
-
-.category-icon-large {
-    font-size: 50px;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
-}
-
-.main-category-header h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-}
-
-.main-category-header p {
-    font-size: 12px;
-    color: #86868b;
-    margin-top: 5px;
-    line-height: 1.4;
-}
-
-/* Grouped Rows */
-.settings-group {
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 12px;
-    margin: 0 20px 15px 20px;
-    border: 0.5px solid rgba(0,0,0,0.1);
-    overflow: hidden;
-}
-
-.settings-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.settings-row:not(:last-child) {
-    border-bottom: 0.5px solid rgba(0,0,0,0.05);
-}
-
-.settings-row:hover {
-    background: rgba(0,0,0,0.03);
-}
-
-.row-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.row-icon {
-    font-size: 18px;
-    width: 24px;
-    text-align: center;
-}
-
-.arrow-glyph {
-    color: #c7c7cc;
-    font-size: 18px;
-    font-weight: 300;
-}
-
-/* Sidebar Icon Colors (matching the screenshot) */
-.s-icon {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    margin-right: 10px;
-    font-size: 12px;
-    color: white;
-}
-
-.s-icon.general { background: #007aff; }
-.s-icon.wifi { background: #007aff; }
-.s-icon.bluetooth { background: #007aff; }
-.s-icon.accessibility { background: #007aff; }
-/* Add more colors as needed */
-
-.arrow-button-group {
-    position: relative;
-    gap: 10px;
-    top: -17px;
-    left: -17px;
-}
-
-.arrow-button-background {
-    position: relative;
-    background-color: white;
-    height: 34px;
-    width: 46px;
-    padding-left: 10px;
-    border-radius: 22px;
-    box-shadow: 0 10px 60px rgba(0, 0, 0, 0.2);
-
-}
-/* Ensure the button itself handles the image alignment */
-.arrow-circle-btn {
-    scale: 50%;
-    opacity: 50%;
-
-}
-
-/* Manejadores para redimensionar */
-.resizer {
-    position: absolute;
-    z-index: 10;
-}
-
-/* Bordes */
-.resizer.r { cursor: e-resize; width: 10px; right: -5px; top: 0; height: 100%; }
-.resizer.b { cursor: s-resize; height: 10px; bottom: -5px; left: 0; width: 100%; }
-.resizer.l { cursor: w-resize; width: 10px; left: -5px; top: 0; height: 100%; }
-.resizer.t { cursor: n-resize; height: 10px; top: -5px; left: 0; width: 100%; }
-
-/* Esquinas */
-.resizer.rb { cursor: se-resize; width: 15px; height: 15px; right: -5px; bottom: -5px; }
-.resizer.lb { cursor: sw-resize; width: 15px; height: 15px; left: -5px; bottom: -5px; }
-
-/* Evitar que los iframes bloqueen los eventos del ratón al redimensionar */
-.resizing iframe {
-    pointer-events: none;
-}
-
-.resizer {
-    position: absolute;
-    z-index: 9999; /* Asegúrate de que esté por encima de TODO en la ventana */
-    /* background: rgba(255,0,0,0.2); */ /* Descomenta esta línea para debuguear y ver los bordes */
-}
-
-/* Bordes más fáciles de agarrar */
-.resizer.t, .resizer.b { height: 10px; }
-.resizer.l, .resizer.r { width: 10px; }
-
-/* Esquinas más grandes para que no fallen */
-.resizer.tl, .resizer.tr, .resizer.lb, .resizer.rb {
-    width: 16px;
-    height: 16px;
-}
-
-.calculator, .note, .terminal, .maps, .safari, .settings-app, .appstore, .music, #about-window {
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important; /* Curva tipo Apple */
-}
-
-/* ESTO ES LO NUEVO: Mientras el JS dice que estamos arrastrando, 
-   quitamos la animación para que la ventana siga al ratón al instante */
-.is-dragging {
-    transition: none !important;
-}
-
-.window--maximized {
-    transition: all 0.2s ease-in-out;
-    box-shadow: none !important;
-
-}
-
-/* Esta es la clave: cuando la ventana se está moviendo o redimensionando, 
-   anulamos la transición para que no tenga lag */
-.resizing, .ui-draggable-dragging, .dragging {
-    transition: none !important;
-}
-
-/* --- POSICIONAMIENTO DE ESQUINAS SUPERIORES --- */
-
-/* Esquina Superior Izquierda (Top-Left) */
-.resizer.tl {
-    top: -2px;
-    left: -5px;
-    width: 16px;
-    height: 16px;
-    cursor: nw-resize; /* Cursor diagonal \ */
-    z-index: 100;
-}
-
-/* Esquina Superior Derecha (Top-Right) */
-.resizer.tr {
-    top: -2px;
-    right: -5px;
-    width: 16px;
-    height: 16px;
-    cursor: ne-resize; /* Cursor diagonal / */
-    z-index: 100;
-}
-
-/* Aseguramos que los bordes laterales y el superior también tengan buena área de agarre */
-.resizer.t { 
-top: -6px;
-width: 97%;
-left: 12px;
-right: 10px;
-height: 10px;
-cursor: n-resize;
-}
-
-.resizer.l, .resizer.r {
-width: 10px;
-height: 94%;
-top: 10px;
-}
-
-/* Ajuste de prioridad: los botones de la taskbar deben estar POR ENCIMA 
-   del resizer para que no dejes de poder cerrar la ventana */
-.window__taskbar--actions, .close-cal, .max-cal, .min-cal {
-    position: relative;
-    z-index: 101; 
-}
-
-/* El recuadro de previsualización (Aesthetic macOS) */
-/* Modificamos el snap-preview para que soporte el ancho completo */
-#snap-preview {
-    position: fixed;
-    top: 30px;
-    height: calc(100vh - 30px - 85px);
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    z-index: 10;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease, left 0.3s ease, width 0.3s ease; /* Añadimos width a la transición */
-    pointer-events: none;
-}
-
-/* Clases para el encajado real */
-.window--snap-left {
-    left: 0 !important;
-    top: 30px !important;
-    width: 50vw !important;
-    height: calc(100vh - 30px - 85px) !important;
-}
-
-.window--snap-right {
-    left: 50vw !important;
-    top: 30px !important;
-    width: 50vw !important;
-    height: calc(100vh - 30px - 85px) !important;
-}
-
-/* ... TODO TU CSS ANTERIOR IGUAL ... */
-
-/* App Store Window - Estructura anti-cortes */
-.appstore {
-  position: absolute !important;
-  width: 1000px;
-  height: 650px;
-  background-color: var(--app-color-white);
-  top: 5%;
-  left: 15%;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  z-index: 10;
-  display: none; 
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.appstore .window__taskbar {
-  flex: 0 0 35px;
-  height: 35px;
-  background-color: var(--app-color-white);
-}
-
-.appstore .content {
-  flex: 1;
-  position: relative;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #fff;
-  overflow: hidden;
-}
-
-.appstore .content iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-
-/* FIX CRÍTICO: Forzar Flex solo en Music y AppStore cuando se abren */
-.music[style*="display: block"], 
-.appstore[style*="display: block"] {
-    display: flex !important;
-}
+    font-size: 0.1px;
+    display: block;
+    -ms-touch-action: none;
+    touch-action: none;
+    Z-index: 90;
+}
+
+/* Cursores para los bordes y esquinas */
+.ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+.ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+.ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+.ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+.ui-resizable-sw { cursor: sw-resize; width: 12px; height: 12px; left: 1px; bottom: 1px; }
+.ui-resizable-nw { cursor: nw-resize; width: 12px; height: 12px; left: 1px; top: 1px; }
+.ui-resizable-ne { cursor: ne-resize; width: 12px; height: 12px; right: 1px; top: 1px; }
+
+/* Asegurar que el contenido interno se adapte al redimensionar */
+.terminal, .note, .calculator, .maps, .safari, .music {
+    min-width: 200px;
+    min-height: 150px;
+}
+
+.terminal, .note, .calculator, .maps, .safari, .music, #draggable-window {
+    min-width: 280px;
+    min-height: 200px;
+}
+/* Forzar que los tiradores laterales existan y sean anchos */
+.ui-resizable-e, .ui-resizable-w {
+    width: 15px !important; /* Aumentamos el área de contacto */
+    background: transparent;
+    z-index: 9999 !important; /* Por encima de todo el contenido de la ventana */
+}
+
+.ui-resizable-e { right: -5px; }
+.ui-resizable-w { left: -5px; }
+
+/* Aseguramos que los cursores cambien correctamente */
+.ui-resizable-e { cursor: e-resize !important; }
+.ui-resizable-w { cursor: w-resize !important; }
+.ui-resizable-n { cursor: n-resize !important; }
+.ui-resizable-s { cursor: s-resize !important; }
+
+/* Esquinas (ancho y alto a la vez) */
+.ui-resizable-se { cursor: se-resize !important; width: 20px; height: 20px; right: 0; bottom: 0; }
