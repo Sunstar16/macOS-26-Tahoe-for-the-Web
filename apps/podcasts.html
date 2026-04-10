@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcasts</title>
+    <style>
+        /* Remove all default spacing from the browser */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Prevents the main page from scrolling */
+            background-color: #000; /* Matches the map loading color */
+        }
+
+        .map-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(99.5% + 145px);
+        }
+
+        iframe {
+            position: absolute;
+            
+            /* CROP SETTINGS */
+            /* Pushes the proxy search bar (approx 75px) off the top */
+            top: -75px; 
+            left: 0;
+            
+            /* Makes iframe taller than the screen to hide the bottom pink bar */
+            width: 100%;
+            height: calc(99.5% + 145px); 
+            
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map-container">
+        <iframe 
+            src="https://webtoppings.bar/browse/?url=https://podcasts.apple.com&region=us-west&mode=privacy" scrolling="no"
+            allow="geolocation">
+        </iframe>
+    </div>
+
+</body>
+</html>
