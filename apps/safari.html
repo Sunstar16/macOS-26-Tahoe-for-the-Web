@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Safari</title>
+    <style>
+        :root { --safari-gray: #e0e0e0; --safari-border: #b5b5b5; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--safari-gray); overflow: hidden; display: flex; flex-direction: column; }
+        
+        header { background: linear-gradient(to bottom, #efefef, #cdcdcd); border-bottom: 1px solid var(--safari-border); padding: 8px 12px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+        .nav-controls { display: flex; gap: 8px; }
+        .nav-btn { background: #fdfdfd; border: 1px solid #999; border-radius: 4px; padding: 2px 10px; cursor: pointer; font-size: 16px; color: #555; height: 26px; min-width: 35px; border: 1px solid rgba(0,0,0,0.2); transition: background 0.1s; }
+        .nav-btn:active { background: #ccc; }
+
+        .address-bar-container { flex-grow: 1; background: white; border: 1px solid #aaa; border-radius: 6px; padding: 4px 10px; display: flex; align-items: center; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
+        .address-bar-container input { border: none; width: 100%; outline: none; font-size: 13px; text-align: center; color: #333; background: transparent; }
+
+        #tab-strip { display: flex; background: #bcbcbc; padding: 4px 10px 0 10px; gap: 1px; border-bottom: 1px solid #999; align-items: center; height: 32px; }
+        .tab { background: #a9a9a9; padding: 4px 15px; border-radius: 5px 5px 0 0; font-size: 12px; cursor: pointer; min-width: 140px; max-width: 200px; border: 1px solid #999; border-bottom: none; display: flex; align-items: center; justify-content: space-between; color: #444; height: 24px; position: relative; }
+        .tab.active { background: white; color: black; z-index: 2; height: 28px; margin-top: -4px; }
+        .tab-title { pointer-events: none; flex-grow: 1; text-align: center; font-weight: 500; }
+        .close-btn { font-size: 14px; margin-left: 8px; opacity: 0.5; cursor: pointer; }
+        .close-btn:hover { color: #ff5f57; opacity: 1; }
+
+        .new-tab-btn { padding: 0 10px; cursor: pointer; font-size: 20px; color: #444; font-weight: bold; }
+
+        #browser-viewport { flex-grow: 1; background: white; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; display: none; }
+        iframe.active { display: block; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="nav-controls">
+        <button class="nav-btn" title="Back" onmousedown="navBack()">❮</button>
+        <button class="nav-btn" title="Forward" onmousedown="navForward()">❯</button>
+        <button class="nav-btn" title="Reload" onmousedown="navReload()">↻</button>
+    </div>
+    <div class="address-bar-container">
+        <input type="text" id="masterUrl" placeholder="Search Bing or type a URL..." onkeydown="if(event.key==='Enter') handleEnter()">
+    </div>
+</header>
+
+<div id="tab-strip">
+    <div class="new-tab-btn" onclick="createNewTab()">+</div>
+</div>
+
+<div id="browser-viewport"></div>
+
+<script>
+    const PROXY = "https://webfuse.com/+iframetest/?url=";
+    const SEARCH_ENGINE = "https://www.bing.com/search?q=";
+    const HOME = "https://www.bing.com";
+
+    let tabCounter = 0; 
+    let activeId = null;
+    let tabHistories = {};
+
+    function createNewTab() {
+        tabCounter++;
+        const uniqueId = `tab-id-${tabCounter}`;
+        
+        const tabEl = document.createElement('div');
+        tabEl.className = 'tab';
+        tabEl.id = `btn-${uniqueId}`;
+        tabEl.onclick = (e) => { if(e.target.className !== 'close-btn') switchTab(uniqueId); };
+        tabEl.innerHTML = `<span class="tab-title">New Tabs</span> <span class="close-btn" onclick="closeTab(event, '${uniqueId}')">×</span>`;
+        
+        const strip = document.getElementById('tab-strip');
+        strip.insertBefore(tabEl, strip.lastElementChild);
+
+        const ifrm = document.createElement('iframe');
+        ifrm.id = uniqueId;
+        
+        // --- ULTIMATE COOKIE PERMISSIONS ---
+        // 1. We allow storage-access and top-navigation
+        ifrm.setAttribute("allow", "storage-access; geolocation; microphone; camera; clipboard-read; clipboard-write; encrypted-media; autoplay;");
+        
+        // 2. We remove the 'sandbox' attribute completely. 
+        // YouTube often blocks logins if it detects a sandbox environment.
+        
+        document.getElementById('browser-viewport').appendChild(ifrm);
+        
+        tabHistories[uniqueId] = HOME;
+        switchTab(uniqueId);
+        navigate(uniqueId, HOME);
+        renumberTabs();
+    }
+
+    function renumberTabs() {
+        const allTabs = document.querySelectorAll('.tab');
+        allTabs.forEach((tab, index) => {
+            tab.querySelector('.tab-title').innerText = `New Tabs ${index + 1}`;
+        });
+    }
+
+    function handleEnter() {
+        const input = document.getElementById('masterUrl').value.trim();
+        if (!input) return;
+        let url = input;
+        const isUrl = input.includes('.') && !input.includes(' ');
+        if (!isUrl && !input.startsWith('http')) {
+            url = SEARCH_ENGINE + encodeURIComponent(input);
+        } else if (!input.startsWith('http')) {
+            url = 'https://' + input;
+        }
+        tabHistories[activeId] = url;
+        navigate(activeId, url);
+        document.getElementById('masterUrl').value = ""; 
+    }
+
+    function navigate(id, url) {
+        document.getElementById(id).src = PROXY + encodeURIComponent(url);
+    }
+
+    function switchTab(id) {
+        if (activeId && document.getElementById(activeId)) {
+            document.getElementById(`btn-${activeId}`).classList.remove('active');
+            document.getElementById(activeId).classList.remove('active');
+        }
+        activeId = id;
+        document.getElementById(`btn-${id}`).classList.add('active');
+        document.getElementById(id).classList.add('active');
+        document.getElementById('masterUrl').value = ""; 
+    }
+
+    function closeTab(e, id) {
+        e.stopPropagation();
+        document.getElementById(`btn-${id}`).remove();
+        document.getElementById(id).remove();
+        delete tabHistories[id];
+        const remaining = document.querySelectorAll('.tab');
+        if (remaining.length > 0) {
+            if (activeId === id) {
+                const lastTabId = remaining[remaining.length - 1].id.replace('btn-', '');
+                switchTab(lastTabId);
+            }
+        } else createNewTab();
+        renumberTabs();
+    }
+
+    function navBack() { const f = document.getElementById(activeId); f.focus(); try { f.contentWindow.history.go(-1); } catch(e) {} }
+    function navForward() { const f = document.getElementById(activeId); f.focus(); try { f.contentWindow.history.go(1); } catch(e) {} }
+    function navReload() { navigate(activeId, tabHistories[activeId]); }
+
+    window.addEventListener('keydown', function(e) {
+        const isMacCmd = e.metaKey;
+        if (isMacCmd && e.key === 'ArrowLeft') { e.preventDefault(); navBack(); }
+        if (isMacCmd && e.key === 'ArrowRight') { e.preventDefault(); navForward(); }
+    });
+
+    window.onload = createNewTab;
+</script>
+</body>
+</html>
